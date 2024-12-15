@@ -9,17 +9,5 @@
 > **Warning**: this project was created using PySide6 and Python 3.9, using previous versions can cause compatibility problems.
 
 # YouTube - Presentation And Tutorials
-Presentation and tutorial video with the main functions of the user interface.
-> 🔗 Presentation - https://youtu.be/1v5errwE8ew
-
-> 🔗 Trailer - https://youtu.be/EJ8XApAl4aw
 
 > **TUTORIALS:**
-
-> Tutorial 01: https://youtu.be/QQGlTGYCMg0
-
-> Tutorial 02: https://youtu.be/LwKre2proDk
-
-> Tutorial 03: https://youtu.be/eUT4J9Ukg8g
-
-> Simple Text Editor - https://youtu.be/v7nh_bSumNQ
