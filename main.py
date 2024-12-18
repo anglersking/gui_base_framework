@@ -96,12 +96,12 @@ class MainWindow(QMainWindow):
             MainFunctions.set_page(self, self.ui.load_pages.page_1)
 
         # WIDGETS BTN
-        if btn.objectName() == "btn_widgets":
+        if btn.objectName() == "go_race_widgets":
             # Select Menu
             self.ui.left_menu.select_only_one(btn.objectName())
 
             # Load Page 2
-            MainFunctions.set_page(self, self.ui.load_pages.page_2)
+            MainFunctions.set_page(self, self.ui.load_pages.page_go_race)
 
         # LOAD USER PAGE
         if btn.objectName() == "btn_add_user":
@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
             if btn.objectName() != "btn_close_left_column":
                 MainFunctions.set_left_column_menu(
                     self, 
-                    menu = self.ui.left_column.menus.menu_1,
+                    menu = self.ui.left_column.menus.menu_setting,
                     title = "Settings Left Column",
                     icon_path = Functions.set_svg_icon("icon_settings.svg")
                 )

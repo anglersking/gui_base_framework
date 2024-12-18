@@ -1,23 +1,22 @@
-# ///////////////////////////////////////////////////////////////
-#
-# BY: WANDERSON M.PIMENTA
-# PROJECT MADE WITH: Qt Designer and PySide6
-# V: 1.0.0
-#
-# This project can be used freely for all uses, as long as they maintain the
-# respective credits only in the Python scripts, any information in the visual
-# interface (GUI) can be modified without any implication.
-#
-# There are limitations on Qt licenses if you want to use your products
-# commercially, I recommend reading them on the official website:
-# https://doc.qt.io/qtforpython/licenses.html
-#
-# ///////////////////////////////////////////////////////////////
+# -*- coding: utf-8 -*-
 
-# IMPORT QT CORE
-# ///////////////////////////////////////////////////////////////
-from qt_core import *
+################################################################################
+## Form generated from reading UI file 'left_column.ui'
+##
+## Created by: Qt User Interface Compiler version 6.8.1
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
 
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QLabel, QSizePolicy, QStackedWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_LeftColumn(object):
     def setupUi(self, LeftColumn):
@@ -75,11 +74,57 @@ class Ui_LeftColumn(object):
         font.setPointSize(16)
         self.label_1.setFont(font)
         self.label_1.setStyleSheet(u"font-size: 16pt")
-        self.label_1.setAlignment(Qt.AlignCenter)
+        self.label_1.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout.addWidget(self.label_1)
 
         self.menus.addWidget(self.menu_1)
+        self.menu_setting = QWidget()
+        self.menu_setting.setObjectName(u"menu_setting")
+        self.verticalLayout_5 = QVBoxLayout(self.menu_setting)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.select_project = QWidget(self.menu_setting)
+        self.select_project.setObjectName(u"select_project")
+        self.select_project.setMinimumSize(QSize(0, 40))
+        self.select_project.setMaximumSize(QSize(16777215, 40))
+        self.select_project_layout = QVBoxLayout(self.select_project)
+        self.select_project_layout.setSpacing(0)
+        self.select_project_layout.setObjectName(u"select_project_layout")
+        self.select_project_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_project)
+
+        self.select_current_count = QWidget(self.menu_setting)
+        self.select_current_count.setObjectName(u"select_current_count")
+        self.select_current_count.setMinimumSize(QSize(0, 40))
+        self.select_current_count.setMaximumSize(QSize(16777215, 40))
+        self.select_current_count_layout = QVBoxLayout(self.select_current_count)
+        self.select_current_count_layout.setSpacing(0)
+        self.select_current_count_layout.setObjectName(u"select_current_count_layout")
+        self.select_current_count_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_current_count)
+
+        self.select_timer_item = QWidget(self.menu_setting)
+        self.select_timer_item.setObjectName(u"select_timer_item")
+        self.select_timer_item.setMinimumSize(QSize(0, 40))
+        self.select_timer_item.setMaximumSize(QSize(16777215, 40))
+        self.select_timer_item_layout = QVBoxLayout(self.select_timer_item)
+        self.select_timer_item_layout.setSpacing(0)
+        self.select_timer_item_layout.setObjectName(u"select_timer_item_layout")
+        self.select_timer_item_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_timer_item)
+
+        self.label_7 = QLabel(self.menu_setting)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFont(font)
+        self.label_7.setStyleSheet(u"font-size: 16pt")
+        self.label_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_5.addWidget(self.label_7)
+
+        self.menus.addWidget(self.menu_setting)
         self.menu_2 = QWidget()
         self.menu_2.setObjectName(u"menu_2")
         self.verticalLayout_2 = QVBoxLayout(self.menu_2)
@@ -101,7 +146,7 @@ class Ui_LeftColumn(object):
         self.label_2.setObjectName(u"label_2")
         self.label_2.setFont(font)
         self.label_2.setStyleSheet(u"font-size: 16pt")
-        self.label_2.setAlignment(Qt.AlignCenter)
+        self.label_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.label_2)
 
@@ -111,7 +156,7 @@ class Ui_LeftColumn(object):
         font1.setPointSize(9)
         self.label_3.setFont(font1)
         self.label_3.setStyleSheet(u"font-size: 9pt")
-        self.label_3.setAlignment(Qt.AlignCenter)
+        self.label_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_3.setWordWrap(True)
 
         self.verticalLayout_2.addWidget(self.label_3)
@@ -123,7 +168,7 @@ class Ui_LeftColumn(object):
 
         self.retranslateUi(LeftColumn)
 
-        self.menus.setCurrentIndex(0)
+        self.menus.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(LeftColumn)
@@ -132,6 +177,7 @@ class Ui_LeftColumn(object):
     def retranslateUi(self, LeftColumn):
         LeftColumn.setWindowTitle(QCoreApplication.translate("LeftColumn", u"Form", None))
         self.label_1.setText(QCoreApplication.translate("LeftColumn", u"Menu 1 - Left Menu", None))
+        self.label_7.setText(QCoreApplication.translate("LeftColumn", u"setting", None))
         self.label_2.setText(QCoreApplication.translate("LeftColumn", u"Menu 2 - Left Menu", None))
         self.label_3.setText(QCoreApplication.translate("LeftColumn", u"This is just an example menu.\n"
 "Add Qt Widgets or your custom widgets here.", None))

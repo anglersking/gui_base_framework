@@ -69,44 +69,44 @@ class SetupMainWindow:
         },
         {
             "btn_icon" : "icon_widgets.svg",
-            "btn_id" : "btn_widgets",
-            "btn_text" : "Show Custom Widgets",
-            "btn_tooltip" : "Show custom widgets",
+            "btn_id" : "go_race_widgets",
+            "btn_text" : "Start Race",
+            "btn_tooltip" : "Start Race",
             "show_top" : True,
             "is_active" : False
         },
-        {
-            "btn_icon" : "icon_add_user.svg",
-            "btn_id" : "btn_add_user",
-            "btn_text" : "Add Users",
-            "btn_tooltip" : "Add users",
-            "show_top" : True,
-            "is_active" : False
-        },
-        {
-            "btn_icon" : "icon_file.svg",
-            "btn_id" : "btn_new_file",
-            "btn_text" : "New File",
-            "btn_tooltip" : "Create new file",
-            "show_top" : True,
-            "is_active" : False
-        },
-        {
-            "btn_icon" : "icon_folder_open.svg",
-            "btn_id" : "btn_open_file",
-            "btn_text" : "Open File",
-            "btn_tooltip" : "Open file",
-            "show_top" : True,
-            "is_active" : False
-        },
-        {
-            "btn_icon" : "icon_save.svg",
-            "btn_id" : "btn_save",
-            "btn_text" : "Save File",
-            "btn_tooltip" : "Save file",
-            "show_top" : True,
-            "is_active" : False
-        },
+        # {
+        #     "btn_icon" : "icon_add_user.svg",
+        #     "btn_id" : "btn_add_user",
+        #     "btn_text" : "Add Users",
+        #     "btn_tooltip" : "Add users",
+        #     "show_top" : True,
+        #     "is_active" : False
+        # },
+        # {
+        #     "btn_icon" : "icon_file.svg",
+        #     "btn_id" : "btn_new_file",
+        #     "btn_text" : "New File",
+        #     "btn_tooltip" : "Create new file",
+        #     "show_top" : True,
+        #     "is_active" : False
+        # },
+        # {
+        #     "btn_icon" : "icon_folder_open.svg",
+        #     "btn_id" : "btn_open_file",
+        #     "btn_text" : "Open File",
+        #     "btn_tooltip" : "Open file",
+        #     "show_top" : True,
+        #     "is_active" : False
+        # },
+        # {
+        #     "btn_icon" : "icon_save.svg",
+        #     "btn_id" : "btn_save",
+        #     "btn_text" : "Save File",
+        #     "btn_tooltip" : "Save file",
+        #     "show_top" : True,
+        #     "is_active" : False
+        # },
         {
             "btn_icon" : "icon_info.svg",
             "btn_id" : "btn_info",
@@ -248,6 +248,68 @@ class SetupMainWindow:
 
         # LEFT COLUMN
         # ///////////////////////////////////////////////////////////////
+        # combox select project
+
+        self.slect_project_combo_box  =PyComboBox(
+            items=["单板(男子组)","单板（女子组）", "双板（男子组）","双板（男子组）"],
+            # items=["prod", "dev", "staging"],
+            place_holder_text="Select an project",
+            radius=8,
+            border_size=2,
+            border_color=self.themes["app_color"]["dark_one"],  # Adjust border color when not focused
+            color=self.themes["app_color"]["text_foreground"],
+            selection_color=self.themes["app_color"]["white"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_active=self.themes["app_color"]["dark_three"],
+            context_color=self.themes["app_color"]["context_color"],
+            arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
+        )
+        self.slect_project_combo_box.setMinimumHeight(35)
+         
+
+
+        # 
+        # 
+        # 
+        # conbox select timer
+                # combox select project
+
+        self.select_timer_combox  =PyComboBox(
+            items=["120s","60s"],
+            # items=["prod", "dev", "staging"],
+            place_holder_text="Select an timer",
+            radius=8,
+            border_size=2,
+            border_color=self.themes["app_color"]["dark_one"],  # Adjust border color when not focused
+            color=self.themes["app_color"]["text_foreground"],
+            selection_color=self.themes["app_color"]["white"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_active=self.themes["app_color"]["dark_three"],
+            context_color=self.themes["app_color"]["context_color"],
+            arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
+        )
+        self.select_timer_combox.setMinimumHeight(35)
+         
+         
+        # combox select count 
+        
+        self.select_timer_count  =PyComboBox(
+            items=["第一次","第二次"],
+            # items=["prod", "dev", "staging"],
+            place_holder_text="Select an count",
+            radius=8,
+            border_size=2,
+            border_color=self.themes["app_color"]["dark_one"],  # Adjust border color when not focused
+            color=self.themes["app_color"]["text_foreground"],
+            selection_color=self.themes["app_color"]["white"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_active=self.themes["app_color"]["dark_three"],
+            context_color=self.themes["app_color"]["context_color"],
+            arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
+        )
+        self.select_timer_count.setMinimumHeight(35)
+         
+
 
         # BTN 1
         self.left_btn_1 = PyPushButton(
@@ -282,6 +344,146 @@ class SetupMainWindow:
 
         # PAGES
         # ///////////////////////////////////////////////////////////////
+
+
+        # PAGE START  GO RACE
+
+                
+        self.select_name  =PyComboBox(
+            items=["小明","小红"],
+            # items=["prod", "dev", "staging"],
+            place_holder_text="Select an count",
+            radius=8,
+            border_size=2,
+            border_color=self.themes["app_color"]["dark_one"],  # Adjust border color when not focused
+            color=self.themes["app_color"]["text_foreground"],
+            selection_color=self.themes["app_color"]["white"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_active=self.themes["app_color"]["dark_three"],
+            context_color=self.themes["app_color"]["context_color"],
+            arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
+        )
+        self.select_name.setMinimumHeight(35)
+
+
+        self.run_start = PyPushButton(
+            text = "Start",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["dark_four"]
+        )
+        self.icon_run_start = QIcon(Functions.set_svg_icon("icon_start.svg"))
+        self.run_start.setMinimumHeight(30)
+        self.run_start.setIcon(self.icon_run_start)
+
+
+
+        self.line_search_edit = PyLineEdit(
+            text = "",
+            place_holder_text = "please input your search key",
+            radius = 8,
+            border_size = 2,
+            color = self.themes["app_color"]["text_foreground"],
+            selection_color = self.themes["app_color"]["white"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_active = self.themes["app_color"]["dark_three"],
+            context_color = self.themes["app_color"]["context_color"]
+        )
+        self.line_search_edit.setMinimumHeight(30)
+
+
+        
+        
+        
+        self.search_btn = PyPushButton(
+            text = "search your program",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["context_color"]
+        )
+        self.icon_search_btn = QIcon(Functions.set_svg_icon("search.svg"))
+        self.search_btn.setMinimumHeight(30)
+        self.search_btn.setIcon(self.icon_search_btn)
+        
+
+        self.timer_info_lable = PyLabel(
+        text="99.51s",
+        color=self.themes["app_color"]["text_foreground"]
+        )
+        self.timer_info_lable.setMinimumHeight(609)
+
+
+        self.current_count_lable = PyLabel(
+        text="当前次数第一次",
+        color=self.themes["app_color"]["text_foreground"]
+        )
+        self.current_count_lable.setMinimumHeight(609)
+
+
+
+
+
+
+            # TABLE WIDGETS
+        self.table_info_widget = PyTableWidget(
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            selection_color = self.themes["app_color"]["context_color"],
+            bg_color = self.themes["app_color"]["bg_two"],
+            header_horizontal_color = self.themes["app_color"]["dark_two"],
+            header_vertical_color = self.themes["app_color"]["bg_three"],
+            bottom_line_color = self.themes["app_color"]["bg_three"],
+            grid_line_color = self.themes["app_color"]["bg_one"],
+            scroll_bar_bg_color = self.themes["app_color"]["bg_one"],
+            scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
+            context_color = self.themes["app_color"]["context_color"]
+        )
+        self.table_info_widget.setColumnCount(3)
+        self.table_info_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table_info_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.table_info_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+        # Columns / Header
+        self.column_1 = QTableWidgetItem()
+        self.column_1.setTextAlignment(Qt.AlignCenter)
+        self.column_1.setText("NAME")
+
+        self.column_2 = QTableWidgetItem()
+        self.column_2.setTextAlignment(Qt.AlignCenter)
+        self.column_2.setText("NICK")
+
+        self.column_3 = QTableWidgetItem()
+        self.column_3.setTextAlignment(Qt.AlignCenter)
+        self.column_3.setText("PASS")
+
+        # Set column
+        self.table_info_widget.setHorizontalHeaderItem(0, self.column_1)
+        self.table_info_widget.setHorizontalHeaderItem(1, self.column_2)
+        self.table_info_widget.setHorizontalHeaderItem(2, self.column_3)
+
+        for x in range(10):
+            row_number = self.table_info_widget.rowCount()
+            self.table_info_widget.insertRow(row_number) # Insert row
+            self.table_info_widget.setItem(row_number, 0, QTableWidgetItem(str("Wanderson"))) # Add name
+            self.table_info_widget.setItem(row_number, 1, QTableWidgetItem(str("vfx_on_fire_" + str(x)))) # Add nick
+            self.pass_text = QTableWidgetItem()
+            self.pass_text.setTextAlignment(Qt.AlignCenter)
+            self.pass_text.setText("12345" + str(x))
+            self.table_info_widget.setItem(row_number, 2, self.pass_text) # Add pass
+            self.table_info_widget.setRowHeight(row_number, 22)
+
+
+
+
+        
+
+
+
+         
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
         self.logo_svg = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
@@ -542,6 +744,29 @@ class SetupMainWindow:
         self.ui.load_pages.row_3_layout.addWidget(self.toggle_button)
         self.ui.load_pages.row_4_layout.addWidget(self.line_edit)
         self.ui.load_pages.row_5_layout.addWidget(self.table_widget)
+
+
+        self.ui.left_column.menus.select_project_layout.addWidget(self.slect_project_combo_box)
+        self.ui.left_column.menus.select_timer_item_layout.addWidget(self.select_timer_combox) 
+        self.ui.left_column.menus.select_current_count_layout.addWidget(self.select_timer_count) 
+
+
+        self.ui.load_pages.row_table_info_layout.addWidget(self.table_info_widget)  
+        self.ui.load_pages.row_operate_layout.addWidget(self.select_name)  
+        self.ui.load_pages.row_operate_layout.addWidget(self.run_start) 
+
+        self.ui.load_pages.row_tabe_operate_layout.addWidget(self.line_search_edit)
+        self.ui.load_pages.row_tabe_operate_layout.addWidget(self.search_btn)
+        
+
+        self.ui.load_pages.row_race_info_layout.addWidget(self.timer_info_lable)
+        self.ui.load_pages.row_race_info_layout.addWidget(self.current_count_lable)
+           
+
+   
+     
+
+
 
         # RIGHT COLUMN
         # ///////////////////////////////////////////////////////////////
