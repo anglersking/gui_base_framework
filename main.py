@@ -64,6 +64,11 @@ class MainWindow(QMainWindow):
         self.hide_grips = True # Show/Hide resize grips
         SetupMainWindow.setup_gui(self)
 
+        self.run_start=SetupMainWindow.get_start_button(self)
+        self.run_start.clicked.connect(self.start_race)
+
+        self.current_count_lable=SetupMainWindow.get_count_lable(self)
+
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -72,6 +77,10 @@ class MainWindow(QMainWindow):
     # Run function when btn is clicked
     # Check funtion by object name / btn_id
     # ///////////////////////////////////////////////////////////////
+
+    def start_race(self):
+        print("dfghjkjgfkjhjklhklhnjl")
+        self.current_count_lable.setText("2345t6yu962387478247849273482374897")
     def btn_clicked(self):
         # GET BT CLICKED
         btn = SetupMainWindow.setup_btns(self)

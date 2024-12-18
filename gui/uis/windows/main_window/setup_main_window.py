@@ -55,6 +55,13 @@ class SetupMainWindow:
         # ///////////////////////////////////////////////////////////////
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self)
+    
+
+    def get_start_button(self):
+        return self.run_start
+    
+    def get_count_lable(self):
+        return self.current_count_lable
 
     # ADD LEFT MENUS
     # ///////////////////////////////////////////////////////////////
