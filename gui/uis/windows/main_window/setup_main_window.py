@@ -421,14 +421,14 @@ class SetupMainWindow:
         text="99.51s",
         color=self.themes["app_color"]["text_foreground"]
         )
-        self.timer_info_lable.setMinimumHeight(609)
+        self.timer_info_lable.setMinimumHeight(60)
 
 
         self.current_count_lable = PyLabel(
         text="当前次数第一次",
         color=self.themes["app_color"]["text_foreground"]
         )
-        self.current_count_lable.setMinimumHeight(609)
+        self.current_count_lable.setMinimumHeight(60)
 
 
 
