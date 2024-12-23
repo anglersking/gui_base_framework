@@ -56,13 +56,38 @@ class SetupMainWindow:
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self)
     
+    def get_import_path(self):
+        return self.import_path
 
+    def get_select_import_file(self):
+        return self.select_import_file
+    
     def get_start_button(self):
         return self.run_start
     
     def get_count_lable(self):
         return self.current_count_lable
+    
+    def get_table_info_widget(self):
+        return self.table_info_widget
+    
+    def get_select_name(self):
+        return self.select_name
+    
+    def get_select_timer_count(self):
+        return self.select_timer_count
 
+    def get_current_count_lable(self):
+        return self.current_count_lable
+
+    def get_search_btn(self):
+        return self.search_btn
+    
+    def get_line_search_edit(self):
+        return self.line_search_edit
+    
+    def get_timer_info_lable(self):
+        return self.timer_info_lable
     # ADD LEFT MENUS
     # ///////////////////////////////////////////////////////////////
     add_left_menus = [
@@ -75,10 +100,10 @@ class SetupMainWindow:
             "is_active" : True
         },
         {
-            "btn_icon" : "icon_widgets.svg",
+            "btn_icon" : "icon_ski.svg",
             "btn_id" : "go_race_widgets",
-            "btn_text" : "Start Race",
-            "btn_tooltip" : "Start Race",
+            "btn_text" : "Ski Racing",
+            "btn_tooltip" : "Ski Racing",
             "show_top" : True,
             "is_active" : False
         },
@@ -258,7 +283,7 @@ class SetupMainWindow:
         # combox select project
 
         self.slect_project_combo_box  =PyComboBox(
-            items=["单板(男子组)","单板（女子组）", "双板（男子组）","双板（男子组）"],
+            items=["单板(男子组)","单板（女子组）", "双板（男子组）","双板（女子组）"],
             # items=["prod", "dev", "staging"],
             place_holder_text="Select an project",
             radius=8,
@@ -316,7 +341,31 @@ class SetupMainWindow:
         )
         self.select_timer_count.setMinimumHeight(35)
          
+        # select import file
+        self.select_import_file = PyPushButton(
+            text="select import file",
+            radius=8,
+            color=self.themes["app_color"]["text_foreground"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_hover=self.themes["app_color"]["dark_three"],
+            bg_color_pressed=self.themes["app_color"]["dark_four"]
+        )
+        self.select_import_file.setMaximumHeight(40)
 
+        # import path
+        self.import_path = PyLineEdit(
+            text = "",
+            place_holder_text = "please select table path",
+            radius = 8,
+            border_size = 2,
+            color = self.themes["app_color"]["text_foreground"],
+            selection_color = self.themes["app_color"]["white"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_active = self.themes["app_color"]["dark_three"],
+            context_color = self.themes["app_color"]["context_color"]
+        )
+        self.import_path.setMinimumHeight(30)
+        
 
         # BTN 1
         self.left_btn_1 = PyPushButton(
@@ -356,8 +405,8 @@ class SetupMainWindow:
         # PAGE START  GO RACE
 
                 
-        self.select_name  =PyComboBox(
-            items=["小明","小红"],
+        self.select_name  = PyComboBox(
+            items=["无"],
             # items=["prod", "dev", "staging"],
             place_holder_text="Select an count",
             radius=8,
@@ -435,7 +484,7 @@ class SetupMainWindow:
 
 
 
-            # TABLE WIDGETS
+        # TABLE WIDGETS
         self.table_info_widget = PyTableWidget(
             radius = 8,
             color = self.themes["app_color"]["text_foreground"],
@@ -449,7 +498,7 @@ class SetupMainWindow:
             scroll_bar_btn_color = self.themes["app_color"]["dark_four"],
             context_color = self.themes["app_color"]["context_color"]
         )
-        self.table_info_widget.setColumnCount(3)
+        self.table_info_widget.setColumnCount(11)
         self.table_info_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table_info_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.table_info_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -457,39 +506,48 @@ class SetupMainWindow:
         # Columns / Header
         self.column_1 = QTableWidgetItem()
         self.column_1.setTextAlignment(Qt.AlignCenter)
-        self.column_1.setText("NAME")
+        self.column_1.setText("组别")
 
         self.column_2 = QTableWidgetItem()
         self.column_2.setTextAlignment(Qt.AlignCenter)
-        self.column_2.setText("NICK")
+        self.column_2.setText("序号")
 
         self.column_3 = QTableWidgetItem()
         self.column_3.setTextAlignment(Qt.AlignCenter)
-        self.column_3.setText("PASS")
+        self.column_3.setText("姓名")
 
-        # Set column
-        self.table_info_widget.setHorizontalHeaderItem(0, self.column_1)
-        self.table_info_widget.setHorizontalHeaderItem(1, self.column_2)
-        self.table_info_widget.setHorizontalHeaderItem(2, self.column_3)
+        self.column_4 = QTableWidgetItem()
+        self.column_4.setTextAlignment(Qt.AlignCenter)
+        self.column_4.setText("性别")
 
-        for x in range(10):
-            row_number = self.table_info_widget.rowCount()
-            self.table_info_widget.insertRow(row_number) # Insert row
-            self.table_info_widget.setItem(row_number, 0, QTableWidgetItem(str("Wanderson"))) # Add name
-            self.table_info_widget.setItem(row_number, 1, QTableWidgetItem(str("vfx_on_fire_" + str(x)))) # Add nick
-            self.pass_text = QTableWidgetItem()
-            self.pass_text.setTextAlignment(Qt.AlignCenter)
-            self.pass_text.setText("12345" + str(x))
-            self.table_info_widget.setItem(row_number, 2, self.pass_text) # Add pass
-            self.table_info_widget.setRowHeight(row_number, 22)
+        self.column_5 = QTableWidgetItem()
+        self.column_5.setTextAlignment(Qt.AlignCenter)
+        self.column_5.setText("年龄")
 
+        self.column_6 = QTableWidgetItem()
+        self.column_6.setTextAlignment(Qt.AlignCenter)
+        self.column_6.setText("赛事名称")
 
+        self.column_7 = QTableWidgetItem()
+        self.column_7.setTextAlignment(Qt.AlignCenter)
+        self.column_7.setText("第一轮成绩")
 
+        self.column_8 = QTableWidgetItem()
+        self.column_8.setTextAlignment(Qt.AlignCenter)
+        self.column_8.setText("第二轮成绩")
 
+        self.column_9 = QTableWidgetItem()
+        self.column_9.setTextAlignment(Qt.AlignCenter)
+        self.column_9.setText("第三轮成绩")
+
+        self.column_10 = QTableWidgetItem()
+        self.column_10.setTextAlignment(Qt.AlignCenter)
+        self.column_10.setText("最优成绩")
+
+        self.column_11 = QTableWidgetItem()
+        self.column_11.setTextAlignment(Qt.AlignCenter)
+        self.column_11.setText("排名")
         
-
-
-
          
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
@@ -756,7 +814,8 @@ class SetupMainWindow:
         self.ui.left_column.menus.select_project_layout.addWidget(self.slect_project_combo_box)
         self.ui.left_column.menus.select_timer_item_layout.addWidget(self.select_timer_combox) 
         self.ui.left_column.menus.select_current_count_layout.addWidget(self.select_timer_count) 
-
+        self.ui.left_column.menus.select_import_btn_layout.addWidget(self.select_import_file)
+        self.ui.left_column.menus.select_import_path_layout.addWidget(self.import_path)
 
         self.ui.load_pages.row_table_info_layout.addWidget(self.table_info_widget)  
         self.ui.load_pages.row_operate_layout.addWidget(self.select_name)  

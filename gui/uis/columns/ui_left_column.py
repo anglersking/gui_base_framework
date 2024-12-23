@@ -23,12 +23,9 @@ class Ui_LeftColumn(object):
         if not LeftColumn.objectName():
             LeftColumn.setObjectName(u"LeftColumn")
         LeftColumn.resize(240, 600)
-        self.main_pages_layout = QVBoxLayout(LeftColumn)
-        self.main_pages_layout.setSpacing(0)
-        self.main_pages_layout.setObjectName(u"main_pages_layout")
-        self.main_pages_layout.setContentsMargins(5, 5, 5, 5)
         self.menus = QStackedWidget(LeftColumn)
         self.menus.setObjectName(u"menus")
+        self.menus.setGeometry(QRect(5, 5, 230, 590))
         self.menu_1 = QWidget()
         self.menu_1.setObjectName(u"menu_1")
         self.verticalLayout = QVBoxLayout(self.menu_1)
@@ -116,6 +113,28 @@ class Ui_LeftColumn(object):
 
         self.verticalLayout_5.addWidget(self.select_timer_item)
 
+        self.select_import_btn = QWidget(self.menu_setting)
+        self.select_import_btn.setObjectName(u"select_import_btn")
+        self.select_import_btn.setMinimumSize(QSize(0, 40))
+        self.select_import_btn.setMaximumSize(QSize(16777215, 40))
+        self.select_import_btn_layout = QVBoxLayout(self.select_import_btn)
+        self.select_import_btn_layout.setSpacing(0)
+        self.select_import_btn_layout.setObjectName(u"select_import_btn_layout")
+        self.select_import_btn_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_import_btn)
+
+        self.select_import_path = QWidget(self.menu_setting)
+        self.select_import_path.setObjectName(u"select_import_path")
+        self.select_import_path.setMinimumSize(QSize(0, 40))
+        self.select_import_path.setMaximumSize(QSize(16777215, 40))
+        self.select_import_path_layout = QVBoxLayout(self.select_import_path)
+        self.select_import_path_layout.setSpacing(0)
+        self.select_import_path_layout.setObjectName(u"select_import_path_layout")
+        self.select_import_path_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_import_path)
+
         self.label_7 = QLabel(self.menu_setting)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setFont(font)
@@ -162,9 +181,6 @@ class Ui_LeftColumn(object):
         self.verticalLayout_2.addWidget(self.label_3)
 
         self.menus.addWidget(self.menu_2)
-
-        self.main_pages_layout.addWidget(self.menus)
-
 
         self.retranslateUi(LeftColumn)
 

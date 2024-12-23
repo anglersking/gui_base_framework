@@ -19,6 +19,7 @@
 from gui.uis.windows.main_window.functions_main_window import *
 import sys
 import os
+import pandas as pd
 
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
@@ -67,8 +68,23 @@ class MainWindow(QMainWindow):
         self.run_start=SetupMainWindow.get_start_button(self)
         self.run_start.clicked.connect(self.start_race)
 
+        self.import_path = SetupMainWindow.get_import_path(self)
         self.current_count_lable=SetupMainWindow.get_count_lable(self)
+        self.select_name=SetupMainWindow.get_select_name(self)
+        self.table_info_widget=SetupMainWindow.get_table_info_widget(self)
 
+        self.select_import_file = SetupMainWindow.get_select_import_file(self)
+        self.select_import_file.clicked.connect(self.select_path)
+
+        self.current_count_lable = SetupMainWindow.get_current_count_lable(self)
+        self.select_timer_count = SetupMainWindow.get_select_timer_count(self)
+        self.select_timer_count.currentIndexChanged.connect(self.update_current_count)
+        
+        self.line_search_edit = SetupMainWindow.get_line_search_edit(self)
+        self.search_btn = SetupMainWindow.get_search_btn(self)
+        self.search_btn.clicked.connect(self.search_in_table)
+
+        self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -77,10 +93,68 @@ class MainWindow(QMainWindow):
     # Run function when btn is clicked
     # Check funtion by object name / btn_id
     # ///////////////////////////////////////////////////////////////
+    def search_in_table(self):
+        # 获取搜索关键字
+        search_key = self.line_search_edit.text().lower()
+
+        if search_key:
+            # 遍历表格，检查每一行是否包含搜索关键词
+            for row in range(self.table_info_widget.rowCount()):
+                row_matches = False  # 标记行是否匹配
+                for col in range(self.table_info_widget.columnCount()):
+                    item = self.table_info_widget.item(row, col)
+                    if item and search_key in item.text().lower():  # 不区分大小写
+                        row_matches = True
+                        break  # 一旦找到匹配项，跳出列的循环
+
+                # 显示匹配的行，其他行隐藏
+                self.table_info_widget.setRowHidden(row, not row_matches)
+        else:
+            # 如果没有输入搜索关键字，显示所有行
+            for row in range(self.table_info_widget.rowCount()):
+                self.table_info_widget.setRowHidden(row, False)
+
+    def update_current_count(self):
+        selected_text = self.select_timer_count.currentText()
+        self.current_count_lable.setText(f"当前次数 {selected_text}")
+
+    def select_path(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
+        
+        # 如果选择了文件，设置路径到文本框
+        if file_path:
+            self.import_path.setText(file_path)
+            self.load_excel_to_table(file_path)
+
+    def load_excel_to_table(self, file_path):   
+        # 读取 Excel 文件
+        try:
+            df = pd.read_excel(file_path)
+
+            if '姓名' in df.columns:
+                names = df['姓名'].dropna().unique().tolist()  # 获取所有非空名字，并去重
+                self.select_name.clear()
+                for name in names:
+                    self.select_name.addItem(name)
+
+            self.table_info_widget.clear()
+            self.table_info_widget.setRowCount(df.shape[0])
+            self.table_info_widget.setColumnCount(df.shape[1])
+
+            for row in range(df.shape[0]):
+                for col in range(df.shape[1]):
+                    value = df.iat[row, col]
+                    if pd.isna(value):
+                        value = ""
+                    item = QTableWidgetItem(str(value))
+                    self.table_info_widget.setItem(row, col, item)
+
+        except Exception as e:
+            print(f"Error loading Excel file: {e}")
 
     def start_race(self):
-        print("dfghjkjgfkjhjklhklhnjl")
-        self.current_count_lable.setText("2345t6yu962387478247849273482374897")
+        self.timer_info_lable.setText("0s")
+
     def btn_clicked(self):
         # GET BT CLICKED
         btn = SetupMainWindow.setup_btns(self)
