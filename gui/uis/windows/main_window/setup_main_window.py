@@ -479,6 +479,12 @@ class SetupMainWindow:
         )
         self.current_count_lable.setMinimumHeight(60)
 
+        self.real_timer_count = PyLabel(
+        text="已过线0次",
+        color=self.themes["app_color"]["text_foreground"]
+        )
+        self.real_timer_count.setMinimumHeight(60)
+
 
 
 
@@ -507,6 +513,8 @@ class SetupMainWindow:
         self.column_1 = QTableWidgetItem()
         self.column_1.setTextAlignment(Qt.AlignCenter)
         self.column_1.setText("组别")
+        
+        
 
         self.column_2 = QTableWidgetItem()
         self.column_2.setTextAlignment(Qt.AlignCenter)
@@ -548,7 +556,13 @@ class SetupMainWindow:
         self.column_11.setTextAlignment(Qt.AlignCenter)
         self.column_11.setText("排名")
         
-         
+        # Set column
+        columns = [self.column_1, self.column_2, self.column_3, self.column_4, 
+           self.column_5, self.column_6, self.column_7,self.column_8,self.column_9,self.column_10,self.column_11]
+
+        for i, column_item in enumerate(columns):
+            self.table_info_widget.setHorizontalHeaderItem(i, column_item)
+                
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
         self.logo_svg = QSvgWidget(Functions.set_svg_image("logo_home.svg"))
@@ -827,6 +841,7 @@ class SetupMainWindow:
 
         self.ui.load_pages.row_race_info_layout.addWidget(self.timer_info_lable)
         self.ui.load_pages.row_race_info_layout.addWidget(self.current_count_lable)
+        self.ui.load_pages.row_race_info_layout.addWidget(self.real_timer_count)
            
 
    
