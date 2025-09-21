@@ -16,6 +16,7 @@
 
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
+from gui.core.functions import Functions
 from gui.widgets.py_table_widget.py_table_widget import PyTableWidget
 from . functions_main_window import *
 import sys
@@ -65,8 +66,8 @@ class SetupMainWindow:
     def get_start_button(self):
         return self.run_start
     
-    def get_count_lable(self):
-        return self.current_count_lable
+    # def get_count_lable(self):
+    #     return self.current_count_lable
     
     def get_table_info_widget(self):
         return self.table_info_widget
@@ -76,9 +77,12 @@ class SetupMainWindow:
     
     def get_select_timer_count(self):
         return self.select_timer_count
-
+    
     def get_current_count_lable(self):
         return self.current_count_lable
+
+    def get_real_timer_count(self):
+        return self.real_timer_count
 
     def get_search_btn(self):
         return self.search_btn
@@ -88,6 +92,13 @@ class SetupMainWindow:
     
     def get_timer_info_lable(self):
         return self.timer_info_lable
+
+    def get_select_timer_combox(self):
+        return self.select_timer_combox
+    
+    def get_slect_race_region(self):
+        return self.slect_race_region
+    
     # ADD LEFT MENUS
     # ///////////////////////////////////////////////////////////////
     add_left_menus = [
@@ -282,6 +293,21 @@ class SetupMainWindow:
         # ///////////////////////////////////////////////////////////////
         # combox select project
 
+        self.slect_race_region =PyComboBox(
+            items=["一区域","二区域"],
+            place_holder_text="Select an region",
+            radius=8,
+            border_size=2,
+            border_color=self.themes["app_color"]["dark_one"],  # Adjust border color when not focused
+            color=self.themes["app_color"]["text_foreground"],
+            selection_color=self.themes["app_color"]["white"],
+            bg_color=self.themes["app_color"]["dark_one"],
+            bg_color_active=self.themes["app_color"]["dark_three"],
+            context_color=self.themes["app_color"]["context_color"],
+            arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
+        )
+        self.slect_race_region.setMinimumHeight(35)
+        
         self.slect_project_combo_box  =PyComboBox(
             items=["单板(男子组)","单板（女子组）", "双板（男子组）","双板（女子组）"],
             # items=["prod", "dev", "staging"],
@@ -306,8 +332,8 @@ class SetupMainWindow:
         # conbox select timer
                 # combox select project
 
-        self.select_timer_combox  =PyComboBox(
-            items=["120s","60s"],
+        self.select_timer_combox =PyComboBox(
+            items=["20s","60s"],
             # items=["prod", "dev", "staging"],
             place_holder_text="Select an timer",
             radius=8,
@@ -325,7 +351,7 @@ class SetupMainWindow:
          
         # combox select count 
         
-        self.select_timer_count  =PyComboBox(
+        self.select_timer_count  = PyComboBox(
             items=["第一次","第二次"],
             # items=["prod", "dev", "staging"],
             place_holder_text="Select an count",
@@ -340,6 +366,8 @@ class SetupMainWindow:
             arrow_color=self.themes["app_color"]["context_color"]  # Set arrow color to match context color
         )
         self.select_timer_count.setMinimumHeight(35)
+
+        
          
         # select import file
         self.select_import_file = PyPushButton(
@@ -467,7 +495,7 @@ class SetupMainWindow:
         
 
         self.timer_info_lable = PyLabel(
-        text="99.51s",
+        text="0s",
         color=self.themes["app_color"]["text_foreground"]
         )
         self.timer_info_lable.setMinimumHeight(60)
@@ -509,59 +537,59 @@ class SetupMainWindow:
         self.table_info_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.table_info_widget.setSelectionBehavior(QAbstractItemView.SelectRows)
 
-        # Columns / Header
-        self.column_1 = QTableWidgetItem()
-        self.column_1.setTextAlignment(Qt.AlignCenter)
-        self.column_1.setText("组别")
+        # # Columns / Header
+        # self.column_1 = QTableWidgetItem()
+        # self.column_1.setTextAlignment(Qt.AlignCenter)
+        # self.column_1.setText("组别")
         
         
 
-        self.column_2 = QTableWidgetItem()
-        self.column_2.setTextAlignment(Qt.AlignCenter)
-        self.column_2.setText("序号")
+        # self.column_2 = QTableWidgetItem()
+        # self.column_2.setTextAlignment(Qt.AlignCenter)
+        # self.column_2.setText("序号")
 
-        self.column_3 = QTableWidgetItem()
-        self.column_3.setTextAlignment(Qt.AlignCenter)
-        self.column_3.setText("姓名")
+        # self.column_3 = QTableWidgetItem()
+        # self.column_3.setTextAlignment(Qt.AlignCenter)
+        # self.column_3.setText("姓名")
 
-        self.column_4 = QTableWidgetItem()
-        self.column_4.setTextAlignment(Qt.AlignCenter)
-        self.column_4.setText("性别")
+        # self.column_4 = QTableWidgetItem()
+        # self.column_4.setTextAlignment(Qt.AlignCenter)
+        # self.column_4.setText("性别")
 
-        self.column_5 = QTableWidgetItem()
-        self.column_5.setTextAlignment(Qt.AlignCenter)
-        self.column_5.setText("年龄")
+        # self.column_5 = QTableWidgetItem()
+        # self.column_5.setTextAlignment(Qt.AlignCenter)
+        # self.column_5.setText("年龄")
 
-        self.column_6 = QTableWidgetItem()
-        self.column_6.setTextAlignment(Qt.AlignCenter)
-        self.column_6.setText("赛事名称")
+        # self.column_6 = QTableWidgetItem()
+        # self.column_6.setTextAlignment(Qt.AlignCenter)
+        # self.column_6.setText("赛事名称")
 
-        self.column_7 = QTableWidgetItem()
-        self.column_7.setTextAlignment(Qt.AlignCenter)
-        self.column_7.setText("第一轮成绩")
+        # self.column_7 = QTableWidgetItem()
+        # self.column_7.setTextAlignment(Qt.AlignCenter)
+        # self.column_7.setText("第一轮成绩")
 
-        self.column_8 = QTableWidgetItem()
-        self.column_8.setTextAlignment(Qt.AlignCenter)
-        self.column_8.setText("第二轮成绩")
+        # self.column_8 = QTableWidgetItem()
+        # self.column_8.setTextAlignment(Qt.AlignCenter)
+        # self.column_8.setText("第二轮成绩")
 
-        self.column_9 = QTableWidgetItem()
-        self.column_9.setTextAlignment(Qt.AlignCenter)
-        self.column_9.setText("第三轮成绩")
+        # self.column_9 = QTableWidgetItem()
+        # self.column_9.setTextAlignment(Qt.AlignCenter)
+        # self.column_9.setText("第三轮成绩")
 
-        self.column_10 = QTableWidgetItem()
-        self.column_10.setTextAlignment(Qt.AlignCenter)
-        self.column_10.setText("最优成绩")
+        # self.column_10 = QTableWidgetItem()
+        # self.column_10.setTextAlignment(Qt.AlignCenter)
+        # self.column_10.setText("最优成绩")
 
-        self.column_11 = QTableWidgetItem()
-        self.column_11.setTextAlignment(Qt.AlignCenter)
-        self.column_11.setText("排名")
+        # self.column_11 = QTableWidgetItem()
+        # self.column_11.setTextAlignment(Qt.AlignCenter)
+        # self.column_11.setText("排名")
         
-        # Set column
-        columns = [self.column_1, self.column_2, self.column_3, self.column_4, 
-           self.column_5, self.column_6, self.column_7,self.column_8,self.column_9,self.column_10,self.column_11]
+        # # Set column
+        # columns = [self.column_1, self.column_2, self.column_3, self.column_4, 
+        #    self.column_5, self.column_6, self.column_7,self.column_8,self.column_9,self.column_10,self.column_11]
 
-        for i, column_item in enumerate(columns):
-            self.table_info_widget.setHorizontalHeaderItem(i, column_item)
+        # for i, column_item in enumerate(columns):
+        #     self.table_info_widget.setHorizontalHeaderItem(i, column_item)
                 
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
@@ -824,7 +852,8 @@ class SetupMainWindow:
         self.ui.load_pages.row_4_layout.addWidget(self.line_edit)
         self.ui.load_pages.row_5_layout.addWidget(self.table_widget)
 
-
+        
+        self.ui.left_column.menus.select_project_layout.addWidget(self.slect_race_region)
         self.ui.left_column.menus.select_project_layout.addWidget(self.slect_project_combo_box)
         self.ui.left_column.menus.select_timer_item_layout.addWidget(self.select_timer_combox) 
         self.ui.left_column.menus.select_current_count_layout.addWidget(self.select_timer_count) 

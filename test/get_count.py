@@ -17,6 +17,7 @@ class CountDevice:
         self.count=0
 
     def run(self, minute: int = 5, TEST=True):
+        """从硬件获取TEST=True"""
         self.start_flag = True
         self.end_flag = False
         self.minute = minute

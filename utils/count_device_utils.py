@@ -16,13 +16,14 @@ class CountDevice:
     def clear(self):
         self.count=0
 
-    def run(self, minute: int = 5, TEST=True):
+    def run(self,region, minute: int = 5, TEST=True):
         self.start_flag = True
         self.end_flag = False
         self.minute = minute
         self.time_start = time.time()
 
         def worker():
+            print(f"区域:{region}")
             while True:
                 if not self.start_flag:
                     with self.lock:
@@ -54,6 +55,7 @@ if __name__ == "__main__":
 
     while True:
         print("当前 count:", device.get_count())
+        
         time.sleep(1)
         if device.end_flag:
             print(f"最终成绩:{device.count}")

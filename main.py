@@ -16,6 +16,7 @@
 
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
+import time
 from gui.uis.windows.main_window.functions_main_window import *
 import sys
 import os
@@ -37,6 +38,7 @@ from gui.uis.windows.main_window import *
 # IMPORT PY ONE DARK WIDGETS
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
+from utils.count_device_utils import CountDevice
 
 # ADJUST QT FONT DPI FOR HIGHT SCALE AN 4K MONITOR
 # ///////////////////////////////////////////////////////////////
@@ -69,7 +71,6 @@ class MainWindow(QMainWindow):
         self.run_start.clicked.connect(self.start_race)
 
         self.import_path = SetupMainWindow.get_import_path(self)
-        self.current_count_lable=SetupMainWindow.get_count_lable(self)
         self.select_name=SetupMainWindow.get_select_name(self)
         self.table_info_widget=SetupMainWindow.get_table_info_widget(self)
 
@@ -79,12 +80,24 @@ class MainWindow(QMainWindow):
         self.current_count_lable = SetupMainWindow.get_current_count_lable(self)
         self.select_timer_count = SetupMainWindow.get_select_timer_count(self)
         self.select_timer_count.currentIndexChanged.connect(self.update_current_count)
+
+        self.select_timer_combox = SetupMainWindow.get_select_timer_combox(self)
+        self.real_timer_count = SetupMainWindow.get_real_timer_count(self)
+        self.race_region = SetupMainWindow.get_slect_race_region(self)
+
         
         self.line_search_edit = SetupMainWindow.get_line_search_edit(self)
         self.search_btn = SetupMainWindow.get_search_btn(self)
         self.search_btn.clicked.connect(self.search_in_table)
 
         self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
+        self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
+        
+        # 初始化设备引用
+        self.race_device = None
+        self.race_timer = None
+        self.race_timer_elapsed = QElapsedTimer()
+        self.race_started = False
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -118,6 +131,8 @@ class MainWindow(QMainWindow):
         selected_text = self.select_timer_count.currentText()
         self.current_count_lable.setText(f"当前次数 {selected_text}")
 
+
+
     def select_path(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
         
@@ -140,6 +155,7 @@ class MainWindow(QMainWindow):
             self.table_info_widget.clear()
             self.table_info_widget.setRowCount(df.shape[0])
             self.table_info_widget.setColumnCount(df.shape[1])
+            self.table_info_widget.setHorizontalHeaderLabels(df.columns.tolist())  # 表头
 
             for row in range(df.shape[0]):
                 for col in range(df.shape[1]):
@@ -153,7 +169,58 @@ class MainWindow(QMainWindow):
             print(f"Error loading Excel file: {e}")
 
     def start_race(self):
-        self.timer_info_lable.setText("0s")
+        self.run_start.setEnabled(False) 
+        set_timer= self.select_timer_combox.currentText()
+        # self.timer_info_lable.setText(set_timer)
+        self.timer_info_lable.setText("等待开始...")
+        # 启动设备
+        duration_seconds = float(set_timer.rstrip('s'))
+        duration_minutes = duration_seconds / 60.0
+
+        self.race_device = CountDevice()
+        self.race_device.clear()
+        self.race_started = False
+
+        self.race_device.run(self.race_region,minute=duration_minutes)  # 6 秒
+        # 设置定时器定期更新界面
+        self.race_timer = QTimer()
+        self.race_timer.timeout.connect(self.update_race_status)
+        self.race_timer.start(10)  # 10毫秒更新一次
+        
+
+    def update_race_status(self):
+        if self.race_device:
+            current_timer = self.race_device.get_count()
+            self.real_timer_count.setText(f"当前次数 {current_timer}次")
+            # 开始计时
+            if current_timer >= 1 and not self.race_started:
+                self.race_timer_elapsed.start()
+                self.race_started = True
+              # 更新计时显示
+            if self.race_started:
+                elapsed_ms = self.race_timer_elapsed.elapsed()
+                seconds = elapsed_ms // 1000
+                milliseconds = elapsed_ms % 1000
+                self.timer_info_lable.setText(f"用时: {seconds}.{milliseconds:03d} 秒")   
+            
+            # 检查是否结束
+            if self.race_device.end_flag:
+                if self.race_started:
+                    elapsed_ms = self.race_timer_elapsed.elapsed()
+                    seconds = elapsed_ms // 1000
+                    milliseconds = elapsed_ms % 1000
+                    time_str = f"{seconds}.{milliseconds:03d}"
+                else:
+                    time_str = "0.000"
+                
+                print(f"最终成绩: {self.race_device.count}次, 用时: {time_str}秒")
+                self.timer_info_lable.setText(f"完成! 用时: {time_str}秒")
+                
+                self.race_device.clear()
+                self.race_timer.stop()
+                self.run_start.setEnabled(True)
+                self.race_device = None
+                self.race_started = False
 
     def btn_clicked(self):
         # GET BT CLICKED
