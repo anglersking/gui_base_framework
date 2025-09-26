@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'left_column.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -22,10 +22,11 @@ class Ui_LeftColumn(object):
     def setupUi(self, LeftColumn):
         if not LeftColumn.objectName():
             LeftColumn.setObjectName(u"LeftColumn")
-        LeftColumn.resize(240, 600)
+        LeftColumn.resize(278, 600)
+        self.verticalLayout_3 = QVBoxLayout(LeftColumn)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.menus = QStackedWidget(LeftColumn)
         self.menus.setObjectName(u"menus")
-        self.menus.setGeometry(QRect(5, 5, 230, 590))
         self.menu_1 = QWidget()
         self.menu_1.setObjectName(u"menu_1")
         self.verticalLayout = QVBoxLayout(self.menu_1)
@@ -80,16 +81,16 @@ class Ui_LeftColumn(object):
         self.menu_setting.setObjectName(u"menu_setting")
         self.verticalLayout_5 = QVBoxLayout(self.menu_setting)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.select_project = QWidget(self.menu_setting)
-        self.select_project.setObjectName(u"select_project")
-        self.select_project.setMinimumSize(QSize(0, 40))
-        self.select_project.setMaximumSize(QSize(16777215, 40))
-        self.select_project_layout = QVBoxLayout(self.select_project)
-        self.select_project_layout.setSpacing(0)
-        self.select_project_layout.setObjectName(u"select_project_layout")
-        self.select_project_layout.setContentsMargins(0, 0, 0, 0)
+        self.select_add = QWidget(self.menu_setting)
+        self.select_add.setObjectName(u"select_add")
+        self.select_add.setMinimumSize(QSize(0, 40))
+        self.select_add.setMaximumSize(QSize(16777215, 40))
+        self.select_add_layout = QVBoxLayout(self.select_add)
+        self.select_add_layout.setSpacing(0)
+        self.select_add_layout.setObjectName(u"select_add_layout")
+        self.select_add_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_5.addWidget(self.select_project)
+        self.verticalLayout_5.addWidget(self.select_add)
 
         self.select_current_count = QWidget(self.menu_setting)
         self.select_current_count.setObjectName(u"select_current_count")
@@ -101,6 +102,17 @@ class Ui_LeftColumn(object):
         self.select_current_count_layout.setContentsMargins(0, 0, 0, 0)
 
         self.verticalLayout_5.addWidget(self.select_current_count)
+
+        self.select_project = QWidget(self.menu_setting)
+        self.select_project.setObjectName(u"select_project")
+        self.select_project.setMinimumSize(QSize(0, 40))
+        self.select_project.setMaximumSize(QSize(16777215, 40))
+        self.select_project_layout = QVBoxLayout(self.select_project)
+        self.select_project_layout.setSpacing(0)
+        self.select_project_layout.setObjectName(u"select_project_layout")
+        self.select_project_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_project)
 
         self.select_timer_item = QWidget(self.menu_setting)
         self.select_timer_item.setObjectName(u"select_timer_item")
@@ -181,6 +193,9 @@ class Ui_LeftColumn(object):
         self.verticalLayout_2.addWidget(self.label_3)
 
         self.menus.addWidget(self.menu_2)
+
+        self.verticalLayout_3.addWidget(self.menus)
+
 
         self.retranslateUi(LeftColumn)
 

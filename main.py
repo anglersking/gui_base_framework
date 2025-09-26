@@ -16,6 +16,8 @@
 
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
+import math
+import random
 import time
 from gui.uis.windows.main_window.functions_main_window import *
 import sys
@@ -89,6 +91,10 @@ class MainWindow(QMainWindow):
         self.line_search_edit = SetupMainWindow.get_line_search_edit(self)
         self.search_btn = SetupMainWindow.get_search_btn(self)
         self.search_btn.clicked.connect(self.search_in_table)
+        self.export_file_btn = SetupMainWindow.get_export_file_btn(self)
+        self.export_file_btn.clicked.connect(self.export_in_table)
+    
+
 
         self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
         self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
@@ -127,6 +133,61 @@ class MainWindow(QMainWindow):
             for row in range(self.table_info_widget.rowCount()):
                 self.table_info_widget.setRowHidden(row, False)
 
+    def export_in_table(self):
+        """将表格数据导出到 Excel 文件"""
+        try:
+            # 检查表格是否有数据
+            if self.table_info_widget.rowCount() == 0 or self.table_info_widget.columnCount() == 0:
+                QMessageBox.warning(self, "导出失败", "表格中没有数据可导出")
+                return
+            
+            # 选择保存路径
+            file_path, _ = QFileDialog.getSaveFileName(
+                self, 
+                "导出 Excel 文件", 
+                "", 
+                "Excel 文件 (*.xlsx);;所有文件 (*)"
+            )
+            
+            if not file_path:
+                return  # 用户取消选择
+            
+            # 确保文件扩展名是 .xlsx
+            if not file_path.endswith('.xlsx'):
+                file_path += '.xlsx'
+            
+            # 从表格中提取数据
+            data = []
+            headers = []
+            
+            # 获取表头
+            for col in range(self.table_info_widget.columnCount()):
+                header_item = self.table_info_widget.horizontalHeaderItem(col)
+                header = header_item.text() if header_item else f"列{col+1}"
+                headers.append(header)
+            
+            # 获取表格数据
+            for row in range(self.table_info_widget.rowCount()):
+                row_data = []
+                for col in range(self.table_info_widget.columnCount()):
+                    item = self.table_info_widget.item(row, col)
+                    if item is not None:
+                        row_data.append(item.text())
+                    else:
+                        row_data.append("")
+                data.append(row_data)
+            
+            # 创建 DataFrame
+            df = pd.DataFrame(data, columns=headers)
+            
+            # 导出到 Excel
+            df.to_excel(file_path, index=False, engine='openpyxl')
+            
+            QMessageBox.information(self, "导出成功", f"数据已成功导出到:\n{file_path}")
+            
+        except Exception as e:
+            QMessageBox.critical(self, "导出失败", f"导出过程中发生错误:\n{str(e)}")
+    
     def update_current_count(self):
         selected_text = self.select_timer_count.currentText()
         self.current_count_lable.setText(f"当前次数 {selected_text}")
@@ -213,14 +274,176 @@ class MainWindow(QMainWindow):
                 else:
                     time_str = "0.000"
                 
-                print(f"最终成绩: {self.race_device.count}次, 用时: {time_str}秒")
-                self.timer_info_lable.setText(f"完成! 用时: {time_str}秒")
+                print(f"最终成绩: {self.race_device.count}次, 用时: {time_str}秒")               
+                self.timer_info_lable.setText(f"完成! 用时: {math.ceil(float(time_str))}秒")
+                self.table_ops()
                 
                 self.race_device.clear()
                 self.race_timer.stop()
                 self.run_start.setEnabled(True)
                 self.race_device = None
                 self.race_started = False
+
+    # def table_ops(self):
+    #     # 在表格中查找并修改
+    #     if "一" in self.select_timer_count.currentText():
+    #         target_column = 6
+    #     elif "二"  in self.select_timer_count.currentText():
+    #         target_column = 7
+        
+    #     for row in range(self.table_info_widget.rowCount()):
+    #         item = self.table_info_widget.item(row, 2)  # 第一列
+    #         if item and item.text() == self.select_name.currentText():
+    #             new_item = QTableWidgetItem(f"{self.race_device.count}")
+    #             self.table_info_widget.setItem(row, target_column, new_item)
+    #             break  # 如果只需要修改第一个匹配项
+
+    def table_ops(self):
+        """表格操作：插入值并根据条件进行排序"""
+        try:
+            timer_text = self.select_timer_count.currentText()
+            
+            # 在表格中查找并修改
+            if "一" in timer_text:
+                target_column = 6  # 第7列
+                self.insert_value_and_sort(target_column)
+                
+            elif "二" in timer_text:
+                target_column = 7  # 第8列
+                self.calculate_and_sort()
+                
+            else:
+                print("未检测到'一'或'二'")
+                return
+                
+        except Exception as e:
+            print(f"表格操作出错: {e}")
+
+    def insert_value_and_sort(self, target_column):
+        """插入值并按照目标列排序"""
+        # 插入值
+        value_inserted = False
+        for row in range(self.table_info_widget.rowCount()):
+            item = self.table_info_widget.item(row, 2)  # 第三列（索引2）匹配姓名
+            if item and item.text() == self.select_name.currentText():
+                # +  random.randint(1, 10)
+                new_item = QTableWidgetItem(f"{self.race_device.count }")
+                self.table_info_widget.setItem(row, target_column, new_item)
+                value_inserted = True
+                # print(f"已在{self.select_name.currentText()}的第{target_column + 1}列插入值: {self.race_device.count}")
+                break
+        
+        if value_inserted:
+            # 按照目标列降序排序，空值排在最后
+            self.sort_column_descending(target_column)
+            # print(f"已按照第{target_column + 1}列降序排序")
+        else:
+            print(f"未找到姓名匹配的行: {self.select_name.currentText()}")
+
+    def calculate_and_sort(self):
+        """计算第7列+第8列的值插入第9列，并按照第9列排序"""
+        # 首先确保表格有足够的列
+        current_cols = self.table_info_widget.columnCount()
+        if current_cols < 9:
+            self.table_info_widget.setColumnCount(9)
+            # 设置新列的表头（如果还没有）
+            for col in range(current_cols, 9):
+                header = self.table_info_widget.horizontalHeaderItem(col)
+                if not header:
+                    self.table_info_widget.setHorizontalHeaderItem(col, QTableWidgetItem(f"列{col+1}"))
+        
+        # 插入值到第8列
+        value_inserted = False
+        for row in range(self.table_info_widget.rowCount()):
+            item = self.table_info_widget.item(row, 2)  # 第三列匹配姓名
+            if item and item.text() == self.select_name.currentText():
+                new_item = QTableWidgetItem(f"{self.race_device.count}")
+                self.table_info_widget.setItem(row, 7, new_item)  # 第8列
+                value_inserted = True
+                # print(f"已在{self.select_name.currentText()}的第8列插入值: {self.race_device.count}")
+                break
+        
+        if value_inserted:
+            # 计算第7列+第8列，结果插入第9列
+            self.calculate_sum_column(6, 7, 8)  # 第7列+第8列→第9列
+            
+            # 按照第9列降序排序
+            self.sort_column_descending(8)  # 第9列索引为8
+            # print("已计算第7列+第8列的值插入第9列，并按照第9列降序排序")
+        else:
+            print(f"未找到姓名匹配的行: {self.select_name.currentText()}")
+
+    def calculate_sum_column(self, col1_idx, col2_idx, result_col_idx):
+        """计算两列的和并插入到结果列"""
+        for row in range(self.table_info_widget.rowCount()):
+            # 获取第7列的值
+            item1 = self.table_info_widget.item(row, col1_idx)
+            value1 = self.safe_convert_to_float(item1.text() if item1 else "0")
+            
+            # 获取第8列的值
+            item2 = self.table_info_widget.item(row, col2_idx)
+            value2 = self.safe_convert_to_float(item2.text() if item2 else "0")
+            
+            # 计算总和
+            total = value1 + value2
+            
+            # 插入到第9列
+            result_item = QTableWidgetItem(str(total))
+            self.table_info_widget.setItem(row, result_col_idx, result_item)
+
+    def sort_column_descending(self, column_index):
+        """按照指定列降序排序，空值排在最后"""
+        rows = self.table_info_widget.rowCount()
+        if rows <= 1:
+            return
+        
+        # 收集所有行的数据和行索引
+        row_data = []
+        for row in range(rows):
+            item = self.table_info_widget.item(row, column_index)
+            if item and item.text().strip():
+                try:
+                    value = float(item.text())
+                    row_data.append((value, row, 1))  # 第三个值表示有数据
+                except ValueError:
+                    # 如果不能转换为数字，按字符串处理
+                    row_data.append((item.text(), row, 1))
+            else:
+                # 空值标记，排序时排在最后
+                row_data.append((float('-inf'), row, 0))
+        
+        # 排序：先按是否有数据（1>0），再按值降序
+        row_data.sort(key=lambda x: (x[2], x[0]), reverse=True)
+        
+        # 重新排列行
+        self.reorder_table_rows([row_idx for _, row_idx, _ in row_data])
+
+    def reorder_table_rows(self, new_row_order):
+        """根据新的行顺序重新排列表格"""
+        rows = self.table_info_widget.rowCount()
+        cols = self.table_info_widget.columnCount()
+        
+        # 保存所有数据
+        all_data = []
+        for row in range(rows):
+            row_data = []
+            for col in range(cols):
+                item = self.table_info_widget.item(row, col)
+                row_data.append(item.text() if item else "")
+            all_data.append(row_data)
+        
+        # 按照新顺序重新设置数据
+        for new_row, old_row in enumerate(new_row_order):
+            for col in range(cols):
+                new_item = QTableWidgetItem(all_data[old_row][col])
+                self.table_info_widget.setItem(new_row, col, new_item)
+
+    def safe_convert_to_float(self, text):
+        """安全地将文本转换为浮点数"""
+        try:
+            return float(text)
+        except ValueError:
+            return 0.0    
 
     def btn_clicked(self):
         # GET BT CLICKED

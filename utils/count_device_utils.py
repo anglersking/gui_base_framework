@@ -16,7 +16,7 @@ class CountDevice:
     def clear(self):
         self.count=0
 
-    def run(self,region, minute: int = 5, TEST=True):
+    def run(self,region: str = "COM5", minute: int = 5, TEST=True):
         self.start_flag = True
         self.end_flag = False
         self.minute = minute

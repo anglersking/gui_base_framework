@@ -87,6 +87,9 @@ class SetupMainWindow:
     def get_search_btn(self):
         return self.search_btn
     
+    def get_export_file_btn(self):
+        return self.export_file_btn
+    
     def get_line_search_edit(self):
         return self.line_search_edit
     
@@ -309,8 +312,7 @@ class SetupMainWindow:
         self.slect_race_region.setMinimumHeight(35)
         
         self.slect_project_combo_box  =PyComboBox(
-            items=["单板(男子组)","单板（女子组）", "双板（男子组）","双板（女子组）"],
-            # items=["prod", "dev", "staging"],
+            items=["U8女子组","U10女子组", "U13女子组","U16-60女子组","U8男子组","U10男子组", "U13男子组","U16-60男子组"],
             place_holder_text="Select an project",
             radius=8,
             border_size=2,
@@ -333,8 +335,7 @@ class SetupMainWindow:
                 # combox select project
 
         self.select_timer_combox =PyComboBox(
-            items=["20s","60s"],
-            # items=["prod", "dev", "staging"],
+            items=["5s","60s","120s"],
             place_holder_text="Select an timer",
             radius=8,
             border_size=2,
@@ -353,7 +354,6 @@ class SetupMainWindow:
         
         self.select_timer_count  = PyComboBox(
             items=["第一次","第二次"],
-            # items=["prod", "dev", "staging"],
             place_holder_text="Select an count",
             radius=8,
             border_size=2,
@@ -435,7 +435,6 @@ class SetupMainWindow:
                 
         self.select_name  = PyComboBox(
             items=["无"],
-            # items=["prod", "dev", "staging"],
             place_holder_text="Select an count",
             radius=8,
             border_size=2,
@@ -492,6 +491,20 @@ class SetupMainWindow:
         self.icon_search_btn = QIcon(Functions.set_svg_icon("search.svg"))
         self.search_btn.setMinimumHeight(30)
         self.search_btn.setIcon(self.icon_search_btn)
+
+
+        self.export_file_btn = PyPushButton(
+            text = "Export your file",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["context_color"]
+        )
+        self.icon_file_btn = QIcon(Functions.set_svg_icon("icon_file.svg"))
+        self.export_file_btn.setMinimumHeight(30)
+        self.export_file_btn.setIcon(self.icon_file_btn)
+
         
 
         self.timer_info_lable = PyLabel(
@@ -853,7 +866,7 @@ class SetupMainWindow:
         self.ui.load_pages.row_5_layout.addWidget(self.table_widget)
 
         
-        self.ui.left_column.menus.select_project_layout.addWidget(self.slect_race_region)
+        self.ui.left_column.menus.select_add_layout.addWidget(self.slect_race_region)
         self.ui.left_column.menus.select_project_layout.addWidget(self.slect_project_combo_box)
         self.ui.left_column.menus.select_timer_item_layout.addWidget(self.select_timer_combox) 
         self.ui.left_column.menus.select_current_count_layout.addWidget(self.select_timer_count) 
@@ -866,7 +879,7 @@ class SetupMainWindow:
 
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.line_search_edit)
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.search_btn)
-        
+        self.ui.load_pages.row_tabe_operate_layout.addWidget(self.export_file_btn)
 
         self.ui.load_pages.row_race_info_layout.addWidget(self.timer_info_lable)
         self.ui.load_pages.row_race_info_layout.addWidget(self.current_count_lable)
