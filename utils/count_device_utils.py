@@ -11,6 +11,8 @@ class CountDevice:
         self.minute = 5
         self.thread = None
         self.lock = threading.Lock()
+        self.grade_info:list =list()
+        # [{"level":"warrning","msg":"合格不合格xxxx"}]
 
     def send_stop(self):
         self.start_flag = False
@@ -82,7 +84,9 @@ class CountDevice:
 
                     if left_vol < 0.03:
                         if right_cout>0:
-                            print("右边 无效成绩，双脚经过次数",right_cout)
+                            # print("右边 无效成绩，双脚经过次数",right_cout)
+                            info={"level":"error","msg":f"右边无效成绩，双脚经过次数 {right_cout}"}
+                            self.grade_info.append(info)
                             right_cout=0
                         if left_flag:
                             if left_cout>=4:
@@ -98,7 +102,9 @@ class CountDevice:
                     if right_vol < 0.03:
                         
                         if left_cout>0:
-                            print("左边 无效成绩，双脚经过次数",left_cout)
+                            # print("左边 无效成绩，双脚经过次数",left_cout)
+                            info={"level":"error","msg":f"左边无效成绩，双脚经过次数 {left_cout}"}
+                            self.grade_info.append(info)
 
                             left_cout=0
                         if right_flag:
@@ -112,24 +118,36 @@ class CountDevice:
 
                     if left_cout==4 or right_cout==4:
                         total+=1
+                        self.count=total
 
                         if right_cout==4:
                             current_line="right"
                             if last_line==current_line:
-                                print("警报 左面没过线重复过右面")
+                                # print("警报 左面没过线重复过右面")
+                                info={"level":"warning","msg":"警报 左面没过线重复过右面"}
+                                self.grade_info.append(info)
 
                            
                             last_line=current_line
- 
-                            print(f"右边过的 有效成绩：{total} 次")
+                            # print(f"右边过的 有效成绩：{total} 次")
+                            info={"level":"info","msg":f"右边过的 有效成绩：{total} 次"}
+                            self.grade_info.append(info)
+
 
                         if left_cout==4:
                             current_line="left"
                             print(f"左边过的 有效成绩：{total} 次")
+                            
 
                             if last_line==current_line:
-                                print("警报 右边没过线重复过左面")
+                                # print("警报 右边没过线重复过左面")
+                                info={"level":"warning","msg":"警报 右边没过线重复过左面"}
+                                self.grade_info.append(info)
+
                             last_line=current_line
+                             # print(f"右边过的 有效成绩：{total} 次")
+                            info={"level":"info","msg":f"左边过的 有效成绩：{total} 次"}
+                            self.grade_info.append(info)
 
                         left_cout=0
                         right_cout=0
@@ -145,9 +163,11 @@ class CountDevice:
         )
         self.thread.start()
 
-    def get_count(self):
+    def get_count(self)->int:
         with self.lock:
             return self.count
+    def get_grade_info(self)->list:
+        return self.grade_info
 
 
 if __name__ == "__main__":

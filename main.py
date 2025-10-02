@@ -41,6 +41,9 @@ from gui.uis.windows.main_window import *
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
 from utils.count_device_utils import CountDevice
+import serial.tools.list_ports
+
+
 
 # ADJUST QT FONT DPI FOR HIGHT SCALE AN 4K MONITOR
 # ///////////////////////////////////////////////////////////////
@@ -99,11 +102,18 @@ class MainWindow(QMainWindow):
         self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
         self.timer_info_lable = SetupMainWindow.get_timer_info_lable(self)
         
+        
         # 初始化设备引用
         self.race_device = None
         self.race_timer = None
         self.race_timer_elapsed = QElapsedTimer()
         self.race_started = False
+        # 列出所有可用串口
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            print(f"设备: {port.device}, 描述: {port.description}")
+            # self.xx.items.append(str(prot.device))
+        
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
         self.show()
