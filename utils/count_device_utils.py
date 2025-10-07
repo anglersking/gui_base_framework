@@ -59,6 +59,8 @@ class CountDevice:
                     else:
                         print("测试时间到")
                         self.time_remain=0
+                        time.sleep(1)
+
 
                         self.end_flag = True
                         break
@@ -85,6 +87,8 @@ class CountDevice:
                     if time.time() - self.time_start >= self.minute * 60:
                         print("真实计数时间到")
                         self.time_remain=0
+                        time.sleep(0.5)
+
                         self.end_flag = True
 
                         break

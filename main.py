@@ -310,7 +310,7 @@ class MainWindow(QMainWindow):
                 else:
                     time_str = "0.000"
                 
-                print(f"最终成绩: {self.race_device.count}次, 用时: {time_str}秒")               
+                print(f"最终成绩: {self.race_device.get_count()}次, 用时: {time_str}秒")               
                 # self.timer_info_lable.setText(f"完成! 用时: {math.ceil(float(time_str))}秒")
                 self.table_ops()
                 
