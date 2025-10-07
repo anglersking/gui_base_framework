@@ -11,7 +11,8 @@ class CountDevice:
         self.minute = 5
         self.thread = None
         self.lock = threading.Lock()
-        self.grade_info:list =list()
+        # self.grade_info:list =list()
+        self.grade_info = [{"level":"warrning","msg":"合格不合格xxxx"}]
         # [{"level":"warrning","msg":"合格不合格xxxx"}]
 
     def send_stop(self):
@@ -176,20 +177,20 @@ if __name__ == "__main__":
     device.clear()
     device.run(region="COM5", minute=0.1, TEST=True)  # 6秒模拟
     while True:
-        print("当前 count:", device.get_count())
+        print("当前 count:", device.get_count(),device.get_grade_info()[0]["level"])
         time.sleep(1)
         if device.end_flag:
             print(f"最终成绩:{device.get_count()}")
             device.clear()
             break
 
-    # 串口真实模式
-    device = CountDevice()
-    device.run(region="COM5", baud=115200, minute=0.2, TEST=False)  # 串口采集12秒
-    while True:
-        print("当前 count:", device.get_count())
-        time.sleep(1)
-        if device.end_flag:
-            print(f"最终成绩:{device.get_count()}")
-            device.clear()
-            break
+    # # 串口真实模式
+    # device = CountDevice()
+    # device.run(region="COM5", baud=115200, minute=0.2, TEST=False)  # 串口采集12秒
+    # while True:
+    #     print("当前 count:", device.get_count())
+    #     time.sleep(1)
+    #     if device.end_flag:
+    #         print(f"最终成绩:{device.get_count()}")
+    #         device.clear()
+    #         break

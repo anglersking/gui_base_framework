@@ -16,6 +16,7 @@
 
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
+from datetime import datetime
 import math
 import random
 import time
@@ -88,6 +89,7 @@ class MainWindow(QMainWindow):
 
         self.select_timer_combox = SetupMainWindow.get_select_timer_combox(self)
         self.real_timer_count = SetupMainWindow.get_real_timer_count(self)
+        self.unqualified_info = SetupMainWindow.get_unqualified_info(self)
         self.race_region = SetupMainWindow.get_slect_race_region(self)
 
         
@@ -109,10 +111,15 @@ class MainWindow(QMainWindow):
         self.race_timer_elapsed = QElapsedTimer()
         self.race_started = False
         # 列出所有可用串口
-        ports = serial.tools.list_ports.comports()
-        for port in ports:
-            print(f"设备: {port.device}, 描述: {port.description}")
-            # self.xx.items.append(str(prot.device))
+        # ports = serial.tools.list_ports.comports()
+        ports = ["COM3","COM5"]
+        self.race_region.clear()
+        self.race_region.addItems(ports)
+        # for port in ports:
+        #     print(f"设备: {port.device}, 描述: {port.description}")
+        #     self.slect_race_region.items.append(str(port.device))
+        self.excel_folder = "D:/race_detail_info"
+        self.current_excel_file = None
         
         # SHOW MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
@@ -251,8 +258,8 @@ class MainWindow(QMainWindow):
         self.race_device = CountDevice()
         self.race_device.clear()
         self.race_started = False
-
-        self.race_device.run(self.race_region,minute=duration_minutes)  # 6 秒
+        self.initialize_excel_file()
+        self.race_device.run(self.race_region.currentText(),minute=duration_minutes)  # 6 秒
         # 设置定时器定期更新界面
         self.race_timer = QTimer()
         self.race_timer.timeout.connect(self.update_race_status)
@@ -263,6 +270,8 @@ class MainWindow(QMainWindow):
         if self.race_device:
             current_timer = self.race_device.get_count()
             self.real_timer_count.setText(f"当前次数 {current_timer}次")
+            current_info = self.race_device.get_grade_info()[0]
+
             # 开始计时
             if current_timer >= 1 and not self.race_started:
                 self.race_timer_elapsed.start()
@@ -272,8 +281,13 @@ class MainWindow(QMainWindow):
                 elapsed_ms = self.race_timer_elapsed.elapsed()
                 seconds = elapsed_ms // 1000
                 milliseconds = elapsed_ms % 1000
-                self.timer_info_lable.setText(f"用时: {seconds}.{milliseconds:03d} 秒")   
-            
+                self.timer_info_lable.setText(f"用时: {seconds}.{milliseconds:03d} 秒") 
+            if self.race_started:
+                if current_info["level"] in ["warrning","error"]:
+                    
+                    self.unqualified_info.setText(current_info["msg"])
+                    # 保存到 Excel
+                    self.save_to_excel(current_info, current_timer)
             # 检查是否结束
             if self.race_device.end_flag:
                 if self.race_started:
@@ -293,20 +307,6 @@ class MainWindow(QMainWindow):
                 self.run_start.setEnabled(True)
                 self.race_device = None
                 self.race_started = False
-
-    # def table_ops(self):
-    #     # 在表格中查找并修改
-    #     if "一" in self.select_timer_count.currentText():
-    #         target_column = 6
-    #     elif "二"  in self.select_timer_count.currentText():
-    #         target_column = 7
-        
-    #     for row in range(self.table_info_widget.rowCount()):
-    #         item = self.table_info_widget.item(row, 2)  # 第一列
-    #         if item and item.text() == self.select_name.currentText():
-    #             new_item = QTableWidgetItem(f"{self.race_device.count}")
-    #             self.table_info_widget.setItem(row, target_column, new_item)
-    #             break  # 如果只需要修改第一个匹配项
 
     def table_ops(self):
         """表格操作：插入值并根据条件进行排序"""
@@ -454,6 +454,60 @@ class MainWindow(QMainWindow):
             return float(text)
         except ValueError:
             return 0.0    
+
+    def initialize_excel_file(self):
+        """初始化 Excel 文件"""
+        try:
+            # 创建文件夹（如果不存在）
+            if not os.path.exists(self.excel_folder):
+                os.makedirs(self.excel_folder)
+                print(f"已创建文件夹: {self.excel_folder}")
+            
+            # 生成以当前名字_场次_时间为文件名的 Excel 文件
+            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            excel_filename = f"{self.select_name.currentText()}_{self.select_timer_count.currentText()}_{current_time}.xlsx"
+            self.current_excel_file = os.path.join(self.excel_folder, excel_filename)
+            
+            # 创建空的 Excel 文件
+            columns = ['timestamp', 'count', 'level', 'message']
+            df = pd.DataFrame(columns=columns)
+            df.to_excel(self.current_excel_file, index=False)
+            print(f"已创建新的 Excel 文件: {self.current_excel_file}")
+            
+        except Exception as e:
+            print(f"初始化 Excel 文件失败: {e}")
+    
+    def save_to_excel(self, current_info, current_timer):
+        """保存信息到 Excel 文件"""
+        try:
+            # 确保文件已初始化
+            if self.current_excel_file is None:
+                self.initialize_excel_file()
+            
+            # 创建新记录
+            new_record = {
+                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'count': current_timer,
+                'level': current_info["level"],
+                'message': current_info["msg"]
+            }
+            
+            # 读取现有数据
+            if os.path.exists(self.current_excel_file):
+                df_existing = pd.read_excel(self.current_excel_file)
+            else:
+                df_existing = pd.DataFrame(columns=['timestamp', 'count', 'level', 'message'])
+            
+            # 添加新记录
+            df_new = pd.DataFrame([new_record])
+            df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+            
+            # 保存到 Excel
+            df_combined.to_excel(self.current_excel_file, index=False)
+            print(f"第 {current_timer} 次记录已保存到: {os.path.basename(self.current_excel_file)}")
+            
+        except Exception as e:
+            print(f"保存到 Excel 失败: {e}")
 
     def btn_clicked(self):
         # GET BT CLICKED

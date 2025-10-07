@@ -40,6 +40,7 @@ from gui.widgets import *
 
 # LOAD UI MAIN
 # ///////////////////////////////////////////////////////////////
+from .functions_main_window import MainFunctions
 from . ui_main import *
 
 # MAIN FUNCTIONS 
@@ -83,6 +84,10 @@ class SetupMainWindow:
 
     def get_real_timer_count(self):
         return self.real_timer_count
+
+    def get_unqualified_info(self):
+        return self.unqualified_info
+
 
     def get_search_btn(self):
         return self.search_btn
@@ -297,7 +302,7 @@ class SetupMainWindow:
         # combox select project
 
         self.slect_race_region =PyComboBox(
-            items=["一区域","二区域"],
+        items=[""],
             place_holder_text="Select an region",
             radius=8,
             border_size=2,
@@ -525,6 +530,12 @@ class SetupMainWindow:
         color=self.themes["app_color"]["text_foreground"]
         )
         self.real_timer_count.setMinimumHeight(60)
+
+        self.unqualified_info = PyLabel(
+        text="不合格信息",
+        color=self.themes["app_color"]["text_foreground"]
+        )
+        self.unqualified_info.setMinimumHeight(60)
 
 
 
@@ -881,9 +892,11 @@ class SetupMainWindow:
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.search_btn)
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.export_file_btn)
 
-        self.ui.load_pages.row_race_info_layout.addWidget(self.timer_info_lable)
+
         self.ui.load_pages.row_race_info_layout.addWidget(self.current_count_lable)
+        self.ui.load_pages.row_race_info_layout.addWidget(self.timer_info_lable)  
         self.ui.load_pages.row_race_info_layout.addWidget(self.real_timer_count)
+        self.ui.load_pages.row_race_info_layout.addWidget(self.unqualified_info)
            
 
    
