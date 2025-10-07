@@ -110,15 +110,20 @@ class MainWindow(QMainWindow):
         self.race_timer = None
         self.race_timer_elapsed = QElapsedTimer()
         self.race_started = False
+        
         # 列出所有可用串口
-        # ports = serial.tools.list_ports.comports()
-        ports = ["COM3","COM5"]
+        ports = serial.tools.list_ports.comports()  # ✅ 必须先定义
+        port_list = [port.device for port in ports]  # 提取串口号列表
+
         self.race_region.clear()
-        self.race_region.addItems(ports)
-        # for port in ports:
-        #     print(f"设备: {port.device}, 描述: {port.description}")
-        #     self.slect_race_region.items.append(str(port.device))
-        self.excel_folder = "D:/race_detail_info"
+        self.race_region.addItems(port_list)
+
+        print("======", port_list)
+
+        for port in ports:
+            print(f"设备: {port.device}, 描述: {port.description}")
+            # self.slect_race_region.append(str(port.device))
+        self.excel_folder = "./race_detail_info"
         self.current_excel_file = None
         
         # SHOW MAIN WINDOW
@@ -269,21 +274,28 @@ class MainWindow(QMainWindow):
     def update_race_status(self):
         if self.race_device:
             current_timer = self.race_device.get_count()
+            time_start_flag= self.race_device.time_start_flag
+
+
             self.real_timer_count.setText(f"当前次数 {current_timer}次")
-            current_info = self.race_device.get_grade_info()[0]
+            if self.race_device.get_grade_info():
+                current_info = self.race_device.get_grade_info()[-1]
 
             # 开始计时
-            if current_timer >= 1 and not self.race_started:
+            if time_start_flag and not self.race_started:
                 self.race_timer_elapsed.start()
                 self.race_started = True
               # 更新计时显示
             if self.race_started:
-                elapsed_ms = self.race_timer_elapsed.elapsed()
+                elapsed_ms = float(self.race_device.get_time_remain())
+                # self.race_timer_elapsed.elapsed()
                 seconds = elapsed_ms // 1000
                 milliseconds = elapsed_ms % 1000
-                self.timer_info_lable.setText(f"用时: {seconds}.{milliseconds:03d} 秒") 
+                
+                # self.timer_info_lable.setText(f"用时: {seconds}.{milliseconds:03d} 秒") 
+                self.timer_info_lable.setText(f"剩余时间: {elapsed_ms :.3f} 秒")
             if self.race_started:
-                if current_info["level"] in ["warrning","error"]:
+                # if current_info["level"] in ["warrning","error"]:
                     
                     self.unqualified_info.setText(current_info["msg"])
                     # 保存到 Excel
@@ -299,7 +311,7 @@ class MainWindow(QMainWindow):
                     time_str = "0.000"
                 
                 print(f"最终成绩: {self.race_device.count}次, 用时: {time_str}秒")               
-                self.timer_info_lable.setText(f"完成! 用时: {math.ceil(float(time_str))}秒")
+                # self.timer_info_lable.setText(f"完成! 用时: {math.ceil(float(time_str))}秒")
                 self.table_ops()
                 
                 self.race_device.clear()

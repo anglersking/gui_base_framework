@@ -11,8 +11,10 @@ class CountDevice:
         self.minute = 5
         self.thread = None
         self.lock = threading.Lock()
-        # self.grade_info:list =list()
-        self.grade_info = [{"level":"warrning","msg":"合格不合格xxxx"}]
+        self.grade_info:list =list()
+        self.time_remain=None
+        self.time_start_flag=False
+        # self.grade_info = [{"level":"warrning","msg":"合格不合格xxxx"}]
         # [{"level":"warrning","msg":"合格不合格xxxx"}]
 
     def send_stop(self):
@@ -27,7 +29,12 @@ class CountDevice:
         self.start_flag = True
         self.end_flag = False
         self.minute = minute
-        self.time_start = time.time()
+        self.time_start = -1
+        self.time_start_flag=False
+        self.time_remain=None
+
+        # self.time_start_flag=False
+        # time.time()
 
         def worker_test():
             print(f"[TEST] 模拟计数，区域: {region}")
@@ -35,14 +42,27 @@ class CountDevice:
                 if not self.start_flag:
                     self.clear()
                     break
-                if time.time() - self.time_start < self.minute * 60:
-                    time.sleep(1)
-                    with self.lock:
-                        self.count += 1
-                else:
-                    print("测试时间到")
-                    self.end_flag = True
-                    break
+                if not(self.time_start_flag):
+                        self.time_start=time.time()
+                        self.time_start_flag=True
+                if self.time_start != -1:
+                    if time.time() - self.time_start < self.minute * 60:
+                        time.sleep(1)
+                        with self.lock:
+                            self.count += 1
+                            info={"level":"info","msg":f"右边过的 有效成绩：{self.count} 次"}
+                            self.grade_info.append(info)
+                            
+                        self.time_remain = self.minute * 60-(time.time() - self.time_start)
+
+                        
+                    else:
+                        print("测试时间到")
+                        self.time_remain=0
+
+                        self.end_flag = True
+                        break
+        
 
         def worker_real():
             print(f"[REAL] 打开串口 {region}, {baud} baud")
@@ -61,10 +81,15 @@ class CountDevice:
             while True:
                 if not self.start_flag:
                     break
-                if time.time() - self.time_start >= self.minute * 60:
-                    print("真实计数时间到")
-                    self.end_flag = True
-                    break
+                if self.time_start != -1:
+                    if time.time() - self.time_start >= self.minute * 60:
+                        print("真实计数时间到")
+                        self.time_remain=0
+                        self.end_flag = True
+
+                        break
+                    else:
+                        self.time_remain = self.minute * 60-(time.time() - self.time_start)
 
                 try:
                     line = ser.readline().decode(errors="ignore").strip()
@@ -83,7 +108,12 @@ class CountDevice:
                     left_vol = float(match.group(2))
                     right_vol = float(match.group(3))
 
-                    if left_vol < 0.03:
+                    if left_vol < 0.3:
+                        if not(self.time_start_flag):
+
+                            self.time_start=time.time()
+                            self.time_start_flag=True
+
                         if right_cout>0:
                             # print("右边 无效成绩，双脚经过次数",right_cout)
                             info={"level":"error","msg":f"右边无效成绩，双脚经过次数 {right_cout}"}
@@ -100,7 +130,13 @@ class CountDevice:
                     if left_vol > 0.9:
                         left_flag = True
 
-                    if right_vol < 0.03:
+                    if right_vol < 0.3:
+                        self.time_start=time.time()
+                        if not(self.time_start_flag):
+
+                            self.time_start=time.time()
+                            self.time_start_flag=True
+
                         
                         if left_cout>0:
                             # print("左边 无效成绩，双脚经过次数",left_cout)
@@ -109,7 +145,7 @@ class CountDevice:
 
                             left_cout=0
                         if right_flag:
-                            if right_cout >= 2:
+                            if right_cout >= 4:
                                 right_cout = 0
                             right_cout += 1
                             print(f"右边经过{right_cout}次")
@@ -120,6 +156,8 @@ class CountDevice:
                     if left_cout==4 or right_cout==4:
                         total+=1
                         self.count=total
+                        
+                        # if self.count==1:
 
                         if right_cout==4:
                             current_line="right"
@@ -163,7 +201,8 @@ class CountDevice:
             daemon=True
         )
         self.thread.start()
-
+    def get_time_remain(self):
+        return self.time_remain
     def get_count(self)->int:
         with self.lock:
             return self.count
