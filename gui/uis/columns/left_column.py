@@ -15,18 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QSizePolicy,
-    QStackedWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QLabel, QSizePolicy, QStackedWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_LeftColumn(object):
     def setupUi(self, LeftColumn):
         if not LeftColumn.objectName():
             LeftColumn.setObjectName(u"LeftColumn")
-        LeftColumn.resize(569, 600)
-        self.main_pages_layout = QVBoxLayout(LeftColumn)
-        self.main_pages_layout.setSpacing(0)
-        self.main_pages_layout.setObjectName(u"main_pages_layout")
-        self.main_pages_layout.setContentsMargins(5, 5, 5, 5)
+        LeftColumn.resize(278, 600)
+        self.verticalLayout_3 = QVBoxLayout(LeftColumn)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.menus = QStackedWidget(LeftColumn)
         self.menus.setObjectName(u"menus")
         self.menu_1 = QWidget()
@@ -81,108 +79,20 @@ class Ui_LeftColumn(object):
         self.menus.addWidget(self.menu_1)
         self.menu_setting = QWidget()
         self.menu_setting.setObjectName(u"menu_setting")
-        self.layoutWidget = QWidget(self.menu_setting)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(0, 0, 541, 240))
-        self.verticalLayout_3 = QVBoxLayout(self.layoutWidget)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.select_import_file = QWidget(self.layoutWidget)
-        self.select_import_file.setObjectName(u"select_import_file")
-        self.select_import_file.setMinimumSize(QSize(0, 40))
-        self.select_import_file.setMaximumSize(QSize(16777215, 40))
-        self.select_import_file_layout = QVBoxLayout(self.select_import_file)
-        self.select_import_file_layout.setSpacing(0)
-        self.select_import_file_layout.setObjectName(u"select_import_file_layout")
-        self.select_import_file_layout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_5 = QVBoxLayout(self.menu_setting)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.select_add = QWidget(self.menu_setting)
+        self.select_add.setObjectName(u"select_add")
+        self.select_add.setMinimumSize(QSize(0, 40))
+        self.select_add.setMaximumSize(QSize(16777215, 40))
+        self.select_add_layout = QVBoxLayout(self.select_add)
+        self.select_add_layout.setSpacing(0)
+        self.select_add_layout.setObjectName(u"select_add_layout")
+        self.select_add_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_3.addWidget(self.select_import_file)
+        self.verticalLayout_5.addWidget(self.select_add)
 
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.label_group = QLabel(self.layoutWidget)
-        self.label_group.setObjectName(u"label_group")
-        self.label_group.setMinimumSize(QSize(0, 40))
-        self.label_group.setMaximumSize(QSize(16777215, 40))
-        self.label_group.setFont(font)
-        self.label_group.setStyleSheet(u"font-size: 16pt")
-        self.label_group.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout_4.addWidget(self.label_group)
-
-        self.select_group = QWidget(self.layoutWidget)
-        self.select_group.setObjectName(u"select_group")
-        self.select_group.setMinimumSize(QSize(0, 40))
-        self.select_group.setMaximumSize(QSize(16777215, 40))
-
-        self.horizontalLayout_4.addWidget(self.select_group)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_4)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.label_project = QLabel(self.layoutWidget)
-        self.label_project.setObjectName(u"label_project")
-        self.label_project.setMinimumSize(QSize(0, 40))
-        self.label_project.setMaximumSize(QSize(16777215, 40))
-        self.label_project.setFont(font)
-        self.label_project.setStyleSheet(u"font-size: 16pt")
-        self.label_project.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout.addWidget(self.label_project)
-
-        self.select_project = QWidget(self.layoutWidget)
-        self.select_project.setObjectName(u"select_project")
-        self.select_project.setMinimumSize(QSize(0, 40))
-        self.select_project.setMaximumSize(QSize(16777215, 40))
-
-        self.horizontalLayout.addWidget(self.select_project)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout)
-
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.label_timer = QLabel(self.layoutWidget)
-        self.label_timer.setObjectName(u"label_timer")
-        self.label_timer.setMinimumSize(QSize(0, 40))
-        self.label_timer.setMaximumSize(QSize(16777215, 40))
-        self.label_timer.setFont(font)
-        self.label_timer.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout_2.addWidget(self.label_timer)
-
-        self.select_timer_item = QWidget(self.layoutWidget)
-        self.select_timer_item.setObjectName(u"select_timer_item")
-        self.select_timer_item.setMinimumSize(QSize(0, 40))
-        self.select_timer_item.setMaximumSize(QSize(16777215, 40))
-        font1 = QFont()
-        font1.setPointSize(9)
-        font1.setBold(False)
-        self.select_timer_item.setFont(font1)
-        self.select_timer_item_layout = QVBoxLayout(self.select_timer_item)
-        self.select_timer_item_layout.setSpacing(0)
-        self.select_timer_item_layout.setObjectName(u"select_timer_item_layout")
-        self.select_timer_item_layout.setContentsMargins(0, 0, 0, 0)
-
-        self.horizontalLayout_2.addWidget(self.select_timer_item)
-
-
-        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.label_count = QLabel(self.layoutWidget)
-        self.label_count.setObjectName(u"label_count")
-        self.label_count.setMinimumSize(QSize(0, 40))
-        self.label_count.setMaximumSize(QSize(16777215, 40))
-        self.label_count.setFont(font)
-        self.label_count.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout_3.addWidget(self.label_count)
-
-        self.select_current_count = QWidget(self.layoutWidget)
+        self.select_current_count = QWidget(self.menu_setting)
         self.select_current_count.setObjectName(u"select_current_count")
         self.select_current_count.setMinimumSize(QSize(0, 40))
         self.select_current_count.setMaximumSize(QSize(16777215, 40))
@@ -191,10 +101,59 @@ class Ui_LeftColumn(object):
         self.select_current_count_layout.setObjectName(u"select_current_count_layout")
         self.select_current_count_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.horizontalLayout_3.addWidget(self.select_current_count)
+        self.verticalLayout_5.addWidget(self.select_current_count)
 
+        self.select_project = QWidget(self.menu_setting)
+        self.select_project.setObjectName(u"select_project")
+        self.select_project.setMinimumSize(QSize(0, 40))
+        self.select_project.setMaximumSize(QSize(16777215, 40))
+        self.select_project_layout = QVBoxLayout(self.select_project)
+        self.select_project_layout.setSpacing(0)
+        self.select_project_layout.setObjectName(u"select_project_layout")
+        self.select_project_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_5.addWidget(self.select_project)
+
+        self.select_timer_item = QWidget(self.menu_setting)
+        self.select_timer_item.setObjectName(u"select_timer_item")
+        self.select_timer_item.setMinimumSize(QSize(0, 40))
+        self.select_timer_item.setMaximumSize(QSize(16777215, 40))
+        self.select_timer_item_layout = QVBoxLayout(self.select_timer_item)
+        self.select_timer_item_layout.setSpacing(0)
+        self.select_timer_item_layout.setObjectName(u"select_timer_item_layout")
+        self.select_timer_item_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_timer_item)
+
+        self.select_import_btn = QWidget(self.menu_setting)
+        self.select_import_btn.setObjectName(u"select_import_btn")
+        self.select_import_btn.setMinimumSize(QSize(0, 40))
+        self.select_import_btn.setMaximumSize(QSize(16777215, 40))
+        self.select_import_btn_layout = QVBoxLayout(self.select_import_btn)
+        self.select_import_btn_layout.setSpacing(0)
+        self.select_import_btn_layout.setObjectName(u"select_import_btn_layout")
+        self.select_import_btn_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_import_btn)
+
+        self.select_import_path = QWidget(self.menu_setting)
+        self.select_import_path.setObjectName(u"select_import_path")
+        self.select_import_path.setMinimumSize(QSize(0, 40))
+        self.select_import_path.setMaximumSize(QSize(16777215, 40))
+        self.select_import_path_layout = QVBoxLayout(self.select_import_path)
+        self.select_import_path_layout.setSpacing(0)
+        self.select_import_path_layout.setObjectName(u"select_import_path_layout")
+        self.select_import_path_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout_5.addWidget(self.select_import_path)
+
+        self.label_7 = QLabel(self.menu_setting)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFont(font)
+        self.label_7.setStyleSheet(u"font-size: 16pt")
+        self.label_7.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_5.addWidget(self.label_7)
 
         self.menus.addWidget(self.menu_setting)
         self.menu_2 = QWidget()
@@ -224,9 +183,9 @@ class Ui_LeftColumn(object):
 
         self.label_3 = QLabel(self.menu_2)
         self.label_3.setObjectName(u"label_3")
-        font2 = QFont()
-        font2.setPointSize(9)
-        self.label_3.setFont(font2)
+        font1 = QFont()
+        font1.setPointSize(9)
+        self.label_3.setFont(font1)
         self.label_3.setStyleSheet(u"font-size: 9pt")
         self.label_3.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label_3.setWordWrap(True)
@@ -235,12 +194,12 @@ class Ui_LeftColumn(object):
 
         self.menus.addWidget(self.menu_2)
 
-        self.main_pages_layout.addWidget(self.menus)
+        self.verticalLayout_3.addWidget(self.menus)
 
 
         self.retranslateUi(LeftColumn)
 
-        self.menus.setCurrentIndex(1)
+        self.menus.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(LeftColumn)
@@ -249,12 +208,9 @@ class Ui_LeftColumn(object):
     def retranslateUi(self, LeftColumn):
         LeftColumn.setWindowTitle(QCoreApplication.translate("LeftColumn", u"Form", None))
         self.label_1.setText(QCoreApplication.translate("LeftColumn", u"Menu 1 - Left Menu", None))
-        self.label_group.setText(QCoreApplication.translate("LeftColumn", u"\u7ec4\u522b", None))
-        self.label_project.setText(QCoreApplication.translate("LeftColumn", u"\u6bd4\u8d5b\u9879\u76ee", None))
-        self.label_timer.setText(QCoreApplication.translate("LeftColumn", u"\u6bd4\u8d5b\u65b9\u5f0f", None))
-        self.label_count.setText(QCoreApplication.translate("LeftColumn", u"\u8bf7\u8f93\u5165\u6bd4\u8d5b\u6b21\u6570", None))
-        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"Menu 2 - Left Menu", None))
-        self.label_3.setText(QCoreApplication.translate("LeftColumn", u"This is just an example menu.\n"
-"Add Qt Widgets or your custom widgets here.", None))
+        self.label_7.setText(QCoreApplication.translate("LeftColumn", u"setting", None))
+        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"\u6ed1\u96ea\u7ade\u8d5b\u6210\u7ee9\u5206\u6790\u8f6f\u4ef6", None))
+        self.label_3.setText(QCoreApplication.translate("LeftColumn", u"This is just an information menu here..\u9047\u5230\u95ee\u9898\u6216\u5408\u4f5c\u8bf7\u8054\u7cfb \u9004\u5148\u751f \n"
+" \u7535\u8bdd\uff1a17604650252", None))
     # retranslateUi
 

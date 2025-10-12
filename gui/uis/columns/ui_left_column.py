@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'left_column.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -199,7 +199,7 @@ class Ui_LeftColumn(object):
 
         self.retranslateUi(LeftColumn)
 
-        self.menus.setCurrentIndex(1)
+        self.menus.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(LeftColumn)
@@ -209,8 +209,8 @@ class Ui_LeftColumn(object):
         LeftColumn.setWindowTitle(QCoreApplication.translate("LeftColumn", u"Form", None))
         self.label_1.setText(QCoreApplication.translate("LeftColumn", u"Menu 1 - Left Menu", None))
         self.label_7.setText(QCoreApplication.translate("LeftColumn", u"setting", None))
-        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"Menu 2 - Left Menu", None))
-        self.label_3.setText(QCoreApplication.translate("LeftColumn", u"This is just an example menu.\n"
-"Add Qt Widgets or your custom widgets here.", None))
+        self.label_2.setText(QCoreApplication.translate("LeftColumn", u"\u6ed1\u96ea\u7ade\u8d5b\u6210\u7ee9\u5206\u6790\u8f6f\u4ef6", None))
+        self.label_3.setText(QCoreApplication.translate("LeftColumn", u"This is just an information menu here..\u9047\u5230\u95ee\u9898\u6216\u5408\u4f5c\u8bf7\u8054\u7cfb \u9004\u5148\u751f \n"
+" \u7535\u8bdd\uff1a17604650252", None))
     # retranslateUi
 
