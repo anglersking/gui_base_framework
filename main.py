@@ -330,7 +330,7 @@ class MainWindow(QMainWindow):
             _name = self.select_name.currentText()
             _num = self.select_timer_count.currentText()
             _path = self.import_path.text()
-            _logs = self.race_device.get_grade_info()[0]
+            _logs = self.race_device.get_grade_info()
             
             if not os.path.exists(_path):
                 print(f"Excel文件不存在: {_path}")
