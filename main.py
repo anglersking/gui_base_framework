@@ -20,6 +20,8 @@ from datetime import datetime
 import math
 import random
 import time
+import trace
+import traceback
 from gui.uis.windows.main_window.functions_main_window import *
 import sys
 import os
@@ -43,7 +45,8 @@ from gui.uis.windows.main_window import *
 from gui.widgets import *
 from utils.count_device_utils import CountDevice
 import serial.tools.list_ports
-
+from openpyxl.styles import Font, Alignment  # 添加Alignment导入
+from openpyxl import load_workbook
 
 
 # ADJUST QT FONT DPI FOR HIGHT SCALE AN 4K MONITOR
@@ -214,8 +217,6 @@ class MainWindow(QMainWindow):
         selected_text = self.select_timer_count.currentText()
         self.current_count_lable.setText(f"当前次数 {selected_text}")
 
-
-
     def select_path(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
         
@@ -268,8 +269,7 @@ class MainWindow(QMainWindow):
         # 设置定时器定期更新界面
         self.race_timer = QTimer()
         self.race_timer.timeout.connect(self.update_race_status)
-        self.race_timer.start(10)  # 10毫秒更新一次
-        
+        self.race_timer.start(10)  # 10毫秒更新一次     
 
     def update_race_status(self):
         if self.race_device:
@@ -298,8 +298,8 @@ class MainWindow(QMainWindow):
                 # if current_info["level"] in ["warrning","error"]:
                     
                     self.unqualified_info.setText(current_info["msg"])
-                    # 保存到 Excel
-                    self.save_to_excel(current_info, current_timer)
+                    # # 保存到 Excel
+                    # self.save_to_excel(current_info, current_timer)
             # 检查是否结束
             if self.race_device.end_flag:
                 if self.race_started:
@@ -312,13 +312,252 @@ class MainWindow(QMainWindow):
                 
                 print(f"最终成绩: {self.race_device.get_count()}次, 用时: {time_str}秒")               
                 # self.timer_info_lable.setText(f"完成! 用时: {math.ceil(float(time_str))}秒")
-                self.table_ops()
+                self.excel_ops_enhanced()
+                # self.table_ops()
                 
                 self.race_device.clear()
                 self.race_timer.stop()
                 self.run_start.setEnabled(True)
                 self.race_device = None
                 self.race_started = False
+
+    def excel_ops_enhanced(self):
+        """excel表格操作,插入到excel表格中"""
+        try:
+            _count = self.race_device.get_count()
+            _name = self.select_name.currentText()
+            _num = self.select_timer_count.currentText()
+            _path = self.import_path.text()
+            _logs = self.race_device.get_grade_info()[0]
+            
+            if not os.path.exists(_path):
+                print(f"Excel文件不存在: {_path}")
+                return
+            
+            # 读取或创建Excel文件
+            if os.path.exists(_path):
+                df = pd.read_excel(_path)
+            else:
+                # 创建新的DataFrame
+                columns = self.get_column_names()
+                df = pd.DataFrame(columns=columns)
+            
+            # 确保列数足够
+            required_columns = 12
+            if df.shape[1] < required_columns:
+                current_columns = df.shape[1]
+                for i in range(current_columns, required_columns):
+                    df[f'列{i+1}'] = ''
+            
+            # 设置有意义的列名
+            column_names = self.get_column_names()
+            if len(df.columns) >= len(column_names):
+                df.columns = column_names[:len(df.columns)]
+            
+            # 查找或创建行
+            target_row = self.find_or_create_row(df, _name)
+            
+            # 插入成绩
+            if "一" in _num:
+                df.iloc[target_row, 6] = _count  # 第七列：第一次成绩
+                df.iloc[target_row, 10] = str(_logs) # 第十一列：第一次info
+            elif "二" in _num:
+                df.iloc[target_row, 7] = _count  # 第八列：第二次成绩
+                df.iloc[target_row, 11] = str(_logs) # 第十二列：第二次info
+
+            
+            # 计算和处理数据
+            self.calculate_total_score(df)
+            self.sort_by_total_score(df)
+            # 保存文件
+            self.save_excel_with_formatting(df, _path)
+
+            self.add_ranking_enhanced(df)     
+            
+            # 保存文件
+            self.save_excel_with_formatting(df, _path)
+
+            # 短暂延迟后加载表格，确保文件已保存
+            time.sleep(0.5)
+            # 显示表格
+            self.load_excel_to_table(_path)
+            
+            print(f"Excel操作完成: {_name} 的{_num}成绩 {_count} 已保存")
+            
+        except Exception as e:
+            print(f"Excel操作出错: {e},{traceback.format_exc()}")
+
+    def find_or_create_row(self, df, name):
+        """查找或创建匹配姓名的行"""
+        for idx, row in df.iterrows():
+            if str(row.iloc[2]).strip() == name.strip():  # 第三列是姓名
+                return idx
+        
+        # 创建新行
+        new_row = ['' for _ in range(df.shape[1])]
+        new_row[2] = name  # 姓名列
+        df.loc[len(df)] = new_row
+        return len(df) - 1
+
+    def calculate_total_score(self, df):
+        """计算第七列和第八列的总分，插入到第九列"""
+        try:
+            # 确保第九列存在
+            if df.shape[1] < 9:
+                df['列9'] = ''
+            
+            # 计算每个行的总分
+            for idx in range(len(df)):
+                print(1111,df.iloc[idx, 6],df.iloc[idx, 7])
+                score1 = self.safe_convert_to_float(df.iloc[idx, 6])  # 第七列
+                score2 = self.safe_convert_to_float(df.iloc[idx, 7])  # 第八列
+                total = score1 + score2 
+                if total != 0:
+                    # 如果是整数，转换为int类型
+                    if total == int(total):
+                        df.iloc[idx, 8] = int(total)  # 存储为整数
+                    else:
+                        df.iloc[idx, 8] = total       # 存储为浮点数
+                
+        except Exception as e:
+            print(f"计算总分出错: {e}")
+
+    def sort_by_total_score(self, df):
+        """按总分从高到低排序"""
+        try:
+            # 确保有第九列（总分列）
+            if df.shape[1] < 9:
+                return
+            
+            # 将总分列转换为数值类型
+            df['总分数值'] = pd.to_numeric(df.iloc[:, 8], errors='coerce').fillna(0)
+            
+            # 按总分降序排序
+            df.sort_values('总分数值', ascending=False, inplace=True)
+            
+            # 删除临时列
+            df.drop('总分数值', axis=1, inplace=True)
+            
+            # 重置索引
+            df.reset_index(drop=True, inplace=True)
+            
+        except Exception as e:
+            print(f"排序出错: {e}")
+
+    def add_ranking_enhanced(self, df):
+        """增强版名次添加，只对有成绩的选手排名"""
+        try:
+            # 确保有第10列（名次列）
+            if df.shape[1] < 10:
+                # 添加名次列
+                df['名次'] = ""
+            else:
+                # 重置所有名次为空
+                df.iloc[:, 9] = ""
+            
+            print(f"开始分配名次，总行数: {len(df)}")
+            
+            # 筛选出有成绩的行（总分 > 0）
+            valid_scores = []
+            for idx in range(len(df)):
+                # 获取总分（第9列，索引8）
+                total_score = self.safe_convert_to_float(df.iloc[idx, 8])
+                print(f"行{idx}: 姓名={df.iloc[idx, 2]}, 总分={total_score}")
+                
+                if total_score > 0:
+                    valid_scores.append((total_score, idx))
+            
+            print(f"有成绩的选手数量: {len(valid_scores)}")
+            
+            if not valid_scores:
+                print("没有找到有成绩的选手")
+                return
+            
+            # 按总分降序排序
+            valid_scores.sort(key=lambda x: x[0], reverse=True)
+            print(f"排序后的成绩: {valid_scores}")
+            
+            # 分配名次
+            current_rank = 1
+            previous_score = None
+            
+            for i, (score, row_idx) in enumerate(valid_scores):
+                # 如果当前分数与前一分数相同，则名次相同
+                if score == previous_score:
+                    df.iloc[row_idx, 9] = int(current_rank - 1)
+                    print(f"行{row_idx}: 姓名={df.iloc[row_idx, 2]}, 分数={score}, 名次={current_rank-1} (并列)")
+                else:
+                    df.iloc[row_idx, 9] = int(current_rank)
+                    print(f"行{row_idx}: 姓名={df.iloc[row_idx, 2]}, 分数={score}, 名次={current_rank}")
+                    current_rank += 1
+                
+                previous_score = score
+            
+            # 验证名次分配
+            print("名次分配验证:")
+            for idx in range(len(df)):
+                total_score = self.safe_convert_to_float(df.iloc[idx, 8])
+                ranking = df.iloc[idx, 9]
+                print(f"行{idx}: 姓名={df.iloc[idx, 2]}, 总分={total_score}, 名次={ranking}")
+            
+            print(f"名次分配完成，共为 {len(valid_scores)} 名选手分配名次")
+        
+        except Exception as e:
+            print(f"添加名次出错: {e}")
+            import traceback
+            traceback.print_exc()
+
+    def save_excel_with_formatting(self, df, file_path):
+        """保存Excel文件并添加格式"""
+        try:
+            # 先用pandas保存数据
+            df.to_excel(file_path, index=False)
+            
+            # 使用openpyxl添加格式
+            wb = load_workbook(file_path)
+            ws = wb.active
+            
+            # 设置表头样式
+            header_font = Font(bold=True)
+            for cell in ws[1]:
+                cell.font = header_font
+                cell.alignment = Alignment(horizontal='center')
+            
+            # 设置列宽
+            column_widths = {
+                'A': 15, 'B': 15, 'C': 20, 'D': 15, 'E': 15,
+                'F': 15, 'G': 15, 'H': 15, 'I': 15, 'J': 15
+            }
+            
+            for col, width in column_widths.items():
+                ws.column_dimensions[col].width = width
+            
+            # 设置数据居中对齐
+            for row in ws.iter_rows(min_row=2, max_row=ws.max_row, 
+                                min_col=1, max_col=ws.max_column):
+                for cell in row:
+                    cell.alignment = Alignment(horizontal='center')
+            
+            # 保存格式化的Excel
+            wb.save(file_path)
+            
+        except Exception as e:
+            print(f"保存Excel格式出错: {e}")
+            # 如果格式化失败，至少保存数据
+            df.to_excel(file_path, index=False)
+
+    def safe_convert_to_float(self, value):
+        """安全地将值转换为浮点数"""
+        try:
+            if pd.isna(value) or value == '' or value is None:
+                return 0.0
+            return float(value)
+        except (ValueError, TypeError):
+            return 0.0
+
+    def get_column_names(self):
+        """获取列名列表"""
+        return ['序号', '学号', '姓名', '班级', '组别', '项目', '第一次', '第二次', '总分', '名次', '第一次信息', '第二次信息'] 
 
     def table_ops(self):
         """表格操作：插入值并根据条件进行排序"""
@@ -459,13 +698,7 @@ class MainWindow(QMainWindow):
             for col in range(cols):
                 new_item = QTableWidgetItem(all_data[old_row][col])
                 self.table_info_widget.setItem(new_row, col, new_item)
-
-    def safe_convert_to_float(self, text):
-        """安全地将文本转换为浮点数"""
-        try:
-            return float(text)
-        except ValueError:
-            return 0.0    
+  
 
     def initialize_excel_file(self):
         """初始化 Excel 文件"""
