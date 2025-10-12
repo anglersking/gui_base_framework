@@ -126,7 +126,6 @@ class MainWindow(QMainWindow):
         for port in ports:
             print(f"设备: {port.device}, 描述: {port.description}")
             # self.slect_race_region.append(str(port.device))
-        self.excel_folder = "./race_detail_info"
         self.current_excel_file = None
         
         # SHOW MAIN WINDOW
@@ -264,7 +263,6 @@ class MainWindow(QMainWindow):
         self.race_device = CountDevice()
         self.race_device.clear()
         self.race_started = False
-        self.initialize_excel_file()
         self.race_device.run(self.race_region.currentText(),minute=duration_minutes)  # 6 秒
         # 设置定时器定期更新界面
         self.race_timer = QTimer()
@@ -457,19 +455,16 @@ class MainWindow(QMainWindow):
                 # 重置所有名次为空
                 df.iloc[:, 9] = ""
             
-            print(f"开始分配名次，总行数: {len(df)}")
             
             # 筛选出有成绩的行（总分 > 0）
             valid_scores = []
             for idx in range(len(df)):
                 # 获取总分（第9列，索引8）
                 total_score = self.safe_convert_to_float(df.iloc[idx, 8])
-                print(f"行{idx}: 姓名={df.iloc[idx, 2]}, 总分={total_score}")
                 
                 if total_score > 0:
                     valid_scores.append((total_score, idx))
             
-            print(f"有成绩的选手数量: {len(valid_scores)}")
             
             if not valid_scores:
                 print("没有找到有成绩的选手")
@@ -477,7 +472,6 @@ class MainWindow(QMainWindow):
             
             # 按总分降序排序
             valid_scores.sort(key=lambda x: x[0], reverse=True)
-            print(f"排序后的成绩: {valid_scores}")
             
             # 分配名次
             current_rank = 1
@@ -486,23 +480,18 @@ class MainWindow(QMainWindow):
             for i, (score, row_idx) in enumerate(valid_scores):
                 # 如果当前分数与前一分数相同，则名次相同
                 if score == previous_score:
-                    df.iloc[row_idx, 9] = int(current_rank - 1)
-                    print(f"行{row_idx}: 姓名={df.iloc[row_idx, 2]}, 分数={score}, 名次={current_rank-1} (并列)")
+                    df.iloc[row_idx, 9] = int(current_rank - 1)   
                 else:
                     df.iloc[row_idx, 9] = int(current_rank)
-                    print(f"行{row_idx}: 姓名={df.iloc[row_idx, 2]}, 分数={score}, 名次={current_rank}")
                     current_rank += 1
                 
                 previous_score = score
             
             # 验证名次分配
-            print("名次分配验证:")
             for idx in range(len(df)):
                 total_score = self.safe_convert_to_float(df.iloc[idx, 8])
                 ranking = df.iloc[idx, 9]
-                print(f"行{idx}: 姓名={df.iloc[idx, 2]}, 总分={total_score}, 名次={ranking}")
             
-            print(f"名次分配完成，共为 {len(valid_scores)} 名选手分配名次")
         
         except Exception as e:
             print(f"添加名次出错: {e}")
@@ -559,202 +548,7 @@ class MainWindow(QMainWindow):
 
     def get_column_names(self):
         """获取列名列表"""
-        return ['序号', '学号', '姓名', '班级', '组别', '项目', '第一次', '第二次', '总分', '名次', '第一次信息', '第二次信息'] 
-
-    def table_ops(self):
-        """表格操作：插入值并根据条件进行排序"""
-        try:
-            timer_text = self.select_timer_count.currentText()
-            
-            # 在表格中查找并修改
-            if "一" in timer_text:
-                target_column = 6  # 第7列
-                self.insert_value_and_sort(target_column)
-                
-            elif "二" in timer_text:
-                target_column = 7  # 第8列
-                self.calculate_and_sort()
-                
-            else:
-                print("未检测到'一'或'二'")
-                return
-                
-        except Exception as e:
-            print(f"表格操作出错: {e}")
-
-    def insert_value_and_sort(self, target_column):
-        """插入值并按照目标列排序"""
-        # 插入值
-        value_inserted = False
-        for row in range(self.table_info_widget.rowCount()):
-            item = self.table_info_widget.item(row, 2)  # 第三列（索引2）匹配姓名
-            if item and item.text() == self.select_name.currentText():
-                # +  random.randint(1, 10)
-                new_item = QTableWidgetItem(f"{self.race_device.count }")
-                self.table_info_widget.setItem(row, target_column, new_item)
-                value_inserted = True
-                # print(f"已在{self.select_name.currentText()}的第{target_column + 1}列插入值: {self.race_device.count}")
-                break
-        
-        if value_inserted:
-            # 按照目标列降序排序，空值排在最后
-            self.sort_column_descending(target_column)
-            # print(f"已按照第{target_column + 1}列降序排序")
-        else:
-            print(f"未找到姓名匹配的行: {self.select_name.currentText()}")
-
-    def calculate_and_sort(self):
-        """计算第7列+第8列的值插入第9列，并按照第9列排序"""
-        # 首先确保表格有足够的列
-        current_cols = self.table_info_widget.columnCount()
-        if current_cols < 9:
-            self.table_info_widget.setColumnCount(9)
-            # 设置新列的表头（如果还没有）
-            for col in range(current_cols, 9):
-                header = self.table_info_widget.horizontalHeaderItem(col)
-                if not header:
-                    self.table_info_widget.setHorizontalHeaderItem(col, QTableWidgetItem(f"列{col+1}"))
-        
-        # 插入值到第8列
-        value_inserted = False
-        for row in range(self.table_info_widget.rowCount()):
-            item = self.table_info_widget.item(row, 2)  # 第三列匹配姓名
-            if item and item.text() == self.select_name.currentText():
-                new_item = QTableWidgetItem(f"{self.race_device.count}")
-                self.table_info_widget.setItem(row, 7, new_item)  # 第8列
-                value_inserted = True
-                # print(f"已在{self.select_name.currentText()}的第8列插入值: {self.race_device.count}")
-                break
-        
-        if value_inserted:
-            # 计算第7列+第8列，结果插入第9列
-            self.calculate_sum_column(6, 7, 8)  # 第7列+第8列→第9列
-            
-            # 按照第9列降序排序
-            self.sort_column_descending(8)  # 第9列索引为8
-            # print("已计算第7列+第8列的值插入第9列，并按照第9列降序排序")
-        else:
-            print(f"未找到姓名匹配的行: {self.select_name.currentText()}")
-
-    def calculate_sum_column(self, col1_idx, col2_idx, result_col_idx):
-        """计算两列的和并插入到结果列"""
-        for row in range(self.table_info_widget.rowCount()):
-            # 获取第7列的值
-            item1 = self.table_info_widget.item(row, col1_idx)
-            value1 = self.safe_convert_to_float(item1.text() if item1 else "0")
-            
-            # 获取第8列的值
-            item2 = self.table_info_widget.item(row, col2_idx)
-            value2 = self.safe_convert_to_float(item2.text() if item2 else "0")
-            
-            # 计算总和
-            total = value1 + value2
-            
-            # 插入到第9列
-            result_item = QTableWidgetItem(str(total))
-            self.table_info_widget.setItem(row, result_col_idx, result_item)
-
-    def sort_column_descending(self, column_index):
-        """按照指定列降序排序，空值排在最后"""
-        rows = self.table_info_widget.rowCount()
-        if rows <= 1:
-            return
-        
-        # 收集所有行的数据和行索引
-        row_data = []
-        for row in range(rows):
-            item = self.table_info_widget.item(row, column_index)
-            if item and item.text().strip():
-                try:
-                    value = float(item.text())
-                    row_data.append((value, row, 1))  # 第三个值表示有数据
-                except ValueError:
-                    # 如果不能转换为数字，按字符串处理
-                    row_data.append((item.text(), row, 1))
-            else:
-                # 空值标记，排序时排在最后
-                row_data.append((float('-inf'), row, 0))
-        
-        # 排序：先按是否有数据（1>0），再按值降序
-        row_data.sort(key=lambda x: (x[2], x[0]), reverse=True)
-        
-        # 重新排列行
-        self.reorder_table_rows([row_idx for _, row_idx, _ in row_data])
-
-    def reorder_table_rows(self, new_row_order):
-        """根据新的行顺序重新排列表格"""
-        rows = self.table_info_widget.rowCount()
-        cols = self.table_info_widget.columnCount()
-        
-        # 保存所有数据
-        all_data = []
-        for row in range(rows):
-            row_data = []
-            for col in range(cols):
-                item = self.table_info_widget.item(row, col)
-                row_data.append(item.text() if item else "")
-            all_data.append(row_data)
-        
-        # 按照新顺序重新设置数据
-        for new_row, old_row in enumerate(new_row_order):
-            for col in range(cols):
-                new_item = QTableWidgetItem(all_data[old_row][col])
-                self.table_info_widget.setItem(new_row, col, new_item)
-  
-
-    def initialize_excel_file(self):
-        """初始化 Excel 文件"""
-        try:
-            # 创建文件夹（如果不存在）
-            if not os.path.exists(self.excel_folder):
-                os.makedirs(self.excel_folder)
-                print(f"已创建文件夹: {self.excel_folder}")
-            
-            # 生成以当前名字_场次_时间为文件名的 Excel 文件
-            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-            excel_filename = f"{self.select_name.currentText()}_{self.select_timer_count.currentText()}_{current_time}.xlsx"
-            self.current_excel_file = os.path.join(self.excel_folder, excel_filename)
-            
-            # 创建空的 Excel 文件
-            columns = ['timestamp', 'count', 'level', 'message']
-            df = pd.DataFrame(columns=columns)
-            df.to_excel(self.current_excel_file, index=False)
-            print(f"已创建新的 Excel 文件: {self.current_excel_file}")
-            
-        except Exception as e:
-            print(f"初始化 Excel 文件失败: {e}")
-    
-    def save_to_excel(self, current_info, current_timer):
-        """保存信息到 Excel 文件"""
-        try:
-            # 确保文件已初始化
-            if self.current_excel_file is None:
-                self.initialize_excel_file()
-            
-            # 创建新记录
-            new_record = {
-                'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'count': current_timer,
-                'level': current_info["level"],
-                'message': current_info["msg"]
-            }
-            
-            # 读取现有数据
-            if os.path.exists(self.current_excel_file):
-                df_existing = pd.read_excel(self.current_excel_file)
-            else:
-                df_existing = pd.DataFrame(columns=['timestamp', 'count', 'level', 'message'])
-            
-            # 添加新记录
-            df_new = pd.DataFrame([new_record])
-            df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-            
-            # 保存到 Excel
-            df_combined.to_excel(self.current_excel_file, index=False)
-            print(f"第 {current_timer} 次记录已保存到: {os.path.basename(self.current_excel_file)}")
-            
-        except Exception as e:
-            print(f"保存到 Excel 失败: {e}")
+        return ['组别', '学号', '姓名', '性别', '年龄', '赛事名称', '第一次', '第二次', '总分', '名次', '第一次信息', '第二次信息'] 
 
     def btn_clicked(self):
         # GET BT CLICKED
