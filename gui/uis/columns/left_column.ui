@@ -17,7 +17,7 @@
    <item>
     <widget class="QStackedWidget" name="menus">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="menu_1">
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -436,7 +436,7 @@
           <string notr="true">font-size: 16pt</string>
          </property>
          <property name="text">
-          <string>Menu 2 - Left Menu</string>
+          <string>滑雪竞赛成绩分析软件</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -454,8 +454,8 @@
           <string notr="true">font-size: 9pt</string>
          </property>
          <property name="text">
-          <string>This is just an example menu.
-Add Qt Widgets or your custom widgets here.</string>
+          <string>This is just an information menu here..遇到问题或合作请联系 逄先生 
+ 电话：17604650252</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>

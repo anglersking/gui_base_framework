@@ -277,7 +277,8 @@ class MainWindow(QMainWindow):
             time_start_flag= self.race_device.time_start_flag
 
 
-            self.real_timer_count.setText(f"当前次数 {current_timer}次")
+            self.real_timer_count.setText(f"当前总有效成绩 {current_timer}次")
+            current_info={"msg":""}
             if self.race_device.get_grade_info():
                 current_info = self.race_device.get_grade_info()[-1]
 
@@ -287,6 +288,7 @@ class MainWindow(QMainWindow):
                 self.race_started = True
               # 更新计时显示
             if self.race_started:
+                # if self.race_device.get_time_remain():
                 elapsed_ms = float(self.race_device.get_time_remain())
                 # self.race_timer_elapsed.elapsed()
                 seconds = elapsed_ms // 1000

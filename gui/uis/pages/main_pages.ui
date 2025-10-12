@@ -32,7 +32,7 @@
    <item>
     <widget class="QStackedWidget" name="pages">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_1">
       <property name="styleSheet">
@@ -132,7 +132,7 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Welcome To PyOneDark GUI</string>
+             <string>Welcome To RaceMaster Go GUI</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -183,8 +183,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>233</width>
-            <height>256</height>
+            <width>840</width>
+            <height>580</height>
            </rect>
           </property>
           <property name="styleSheet">

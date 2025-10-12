@@ -50,7 +50,7 @@ class CountDevice:
                         time.sleep(1)
                         with self.lock:
                             self.count += 1
-                            info={"level":"info","msg":f"右边过的 有效成绩：{self.count} 次"}
+                            info={"level":"info","msg":f"右边成绩有效 总有效成绩：{self.count} 次"}
                             self.grade_info.append(info)
                             
                         self.time_remain = self.minute * 60-(time.time() - self.time_start)
@@ -173,7 +173,7 @@ class CountDevice:
                            
                             last_line=current_line
                             # print(f"右边过的 有效成绩：{total} 次")
-                            info={"level":"info","msg":f"右边过的 有效成绩：{total} 次"}
+                            info={"level":"info","msg":f"右边成绩有效 总有效成绩：{total} 次"}
                             self.grade_info.append(info)
 
 
@@ -189,7 +189,7 @@ class CountDevice:
 
                             last_line=current_line
                              # print(f"右边过的 有效成绩：{total} 次")
-                            info={"level":"info","msg":f"左边过的 有效成绩：{total} 次"}
+                            info={"level":"info","msg":f"左边成绩有效 有效成绩：{total} 次"}
                             self.grade_info.append(info)
 
                         left_cout=0
@@ -206,7 +206,10 @@ class CountDevice:
         )
         self.thread.start()
     def get_time_remain(self):
-        return self.time_remain
+        if self.time_remain is None:
+            return 0
+        else:
+            return self.time_remain
     def get_count(self)->int:
         with self.lock:
             return self.count
