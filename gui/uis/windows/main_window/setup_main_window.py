@@ -340,7 +340,7 @@ class SetupMainWindow:
                 # combox select project
 
         self.select_timer_combox =PyComboBox(
-            items=["5s","60s","120s"],
+            items=["60s","120s"],
             place_holder_text="Select an timer",
             radius=8,
             border_size=2,

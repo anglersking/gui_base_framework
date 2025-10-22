@@ -121,7 +121,6 @@ class MainWindow(QMainWindow):
         self.race_region.clear()
         self.race_region.addItems(port_list)
 
-        print("======", port_list)
 
         for port in ports:
             print(f"设备: {port.device}, 描述: {port.description}")
@@ -263,7 +262,7 @@ class MainWindow(QMainWindow):
         self.race_device = CountDevice()
         self.race_device.clear()
         self.race_started = False
-        self.race_device.run(self.race_region.currentText(),minute=duration_minutes)  # 6 秒
+        self.race_device.run(self.race_region.currentText(),minute=duration_minutes,TEST=False)  # 6 秒
         # 设置定时器定期更新界面
         self.race_timer = QTimer()
         self.race_timer.timeout.connect(self.update_race_status)
@@ -408,7 +407,6 @@ class MainWindow(QMainWindow):
             
             # 计算每个行的总分
             for idx in range(len(df)):
-                print(1111,df.iloc[idx, 6],df.iloc[idx, 7])
                 score1 = self.safe_convert_to_float(df.iloc[idx, 6])  # 第七列
                 score2 = self.safe_convert_to_float(df.iloc[idx, 7])  # 第八列
                 total = score1 + score2 
