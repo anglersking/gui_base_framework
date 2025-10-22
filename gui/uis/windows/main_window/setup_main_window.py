@@ -376,7 +376,7 @@ class SetupMainWindow:
          
         # select import file
         self.select_import_file = PyPushButton(
-            text="select import file",
+            text="选择excel参赛表格",
             radius=8,
             color=self.themes["app_color"]["text_foreground"],
             bg_color=self.themes["app_color"]["dark_one"],
@@ -388,7 +388,7 @@ class SetupMainWindow:
         # import path
         self.import_path = PyLineEdit(
             text = "",
-            place_holder_text = "please select table path",
+            place_holder_text = "表格路径",
             radius = 8,
             border_size = 2,
             color = self.themes["app_color"]["text_foreground"],
@@ -470,7 +470,7 @@ class SetupMainWindow:
 
         self.line_search_edit = PyLineEdit(
             text = "",
-            place_holder_text = "please input your search key",
+            place_holder_text = "关键字搜索",
             radius = 8,
             border_size = 2,
             color = self.themes["app_color"]["text_foreground"],
@@ -486,7 +486,7 @@ class SetupMainWindow:
         
         
         self.search_btn = PyPushButton(
-            text = "search your program",
+            text = "搜索",
             radius = 8,
             color = self.themes["app_color"]["text_foreground"],
             bg_color = self.themes["app_color"]["dark_one"],
@@ -499,7 +499,7 @@ class SetupMainWindow:
 
 
         self.export_file_btn = PyPushButton(
-            text = "Export your file",
+            text = "表格导出另存为",
             radius = 8,
             color = self.themes["app_color"]["text_foreground"],
             bg_color = self.themes["app_color"]["dark_one"],
