@@ -2,7 +2,7 @@ import time
 import threading
 import re
 import serial  # 需要 pip install pyserial
-
+from utils.log import Log
 class CountDevice:
     def __init__(self):
         self.count: int = 0
@@ -52,8 +52,12 @@ class CountDevice:
                             self.count += 1
                             info={"level":"info","msg":f"右边成绩有效 总有效成绩：{self.count} 次"}
                             self.grade_info.append(info)
-                            
-                        self.time_remain = self.minute * 60-(time.time() - self.time_start)
+                        Log.info(f"count_utils {self.remain} ")
+                        time_now=time.time() 
+    
+                        self.time_remain = self.minute * 60-(time_now - self.time_start)
+                        Log.info(f"count_utils  {self.minute} - ( {time_now} - {self.time_start} )")
+
 
                         
                     else:
@@ -93,10 +97,20 @@ class CountDevice:
 
                         break
                     else:
-                        self.time_remain = self.minute * 60-(time.time() - self.time_start)
+                        time_now=time.time()
+
+                        # Log.info(f"count_utils remain {self.time_remain})")
+
+
+                        self.time_remain = self.minute * 60-(time_now - self.time_start)
+
+                        # Log.info(f"count_utils  {self.minute} - ( {time_now} - {self.time_start} )")
+
 
                 try:
                     line = ser.readline().decode(errors="ignore").strip()
+                    # Log.info(line)
+
                 except Exception as e:
                     print(f"串口读取错误: {e}")
                     continue
@@ -111,6 +125,8 @@ class CountDevice:
                 if match:
                     left_vol = float(match.group(2))
                     right_vol = float(match.group(3))
+                    # Log.info(f"left vol {left_vol} , right vol {right_vol}")
+
 
                     if left_vol < 0.3:
                         if not(self.time_start_flag):
@@ -121,13 +137,16 @@ class CountDevice:
                         if right_cout>0:
                             # print("右边 无效成绩，双脚经过次数",right_cout)
                             info={"level":"error","msg":f"右边无效成绩，双脚经过次数 {right_cout}"}
+                            Log.info(f"==============={info}")
                             self.grade_info.append(info)
                             right_cout=0
                         if left_flag:
                             if left_cout>=4:
                                 left_cout=0
                             left_cout+=1
-                            print(f"左边经过{left_cout}次")
+                            # print(f"左边经过{left_cout}次")
+                            Log.info(f"左边经过{left_cout}次")
+
                             
                             left_flag=False
 
@@ -135,7 +154,7 @@ class CountDevice:
                         left_flag = True
 
                     if right_vol < 0.3:
-                        self.time_start=time.time()
+                        # self.time_start=time.time()
                         if not(self.time_start_flag):
 
                             self.time_start=time.time()
@@ -145,6 +164,7 @@ class CountDevice:
                         if left_cout>0:
                             # print("左边 无效成绩，双脚经过次数",left_cout)
                             info={"level":"error","msg":f"左边无效成绩，双脚经过次数 {left_cout}"}
+                            Log.info(f"left-------{info}")
                             self.grade_info.append(info)
 
                             left_cout=0
@@ -152,7 +172,8 @@ class CountDevice:
                             if right_cout >= 4:
                                 right_cout = 0
                             right_cout += 1
-                            print(f"右边经过{right_cout}次")
+                            Log.info(f"右边经过{right_cout}次")
+
                             right_flag = False
                     if right_vol > 0.9:
                         right_flag = True
@@ -168,28 +189,37 @@ class CountDevice:
                             if last_line==current_line:
                                 # print("警报 左面没过线重复过右面")
                                 info={"level":"warning","msg":"警报 左面没过线重复过右面"}
+                                Log.info(f"{info}")
                                 self.grade_info.append(info)
 
                            
                             last_line=current_line
                             # print(f"右边过的 有效成绩：{total} 次")
                             info={"level":"info","msg":f"右边成绩有效 总有效成绩：{total} 次"}
+                            Log.info(f"{info}")
+
                             self.grade_info.append(info)
 
 
                         if left_cout==4:
                             current_line="left"
-                            print(f"左边过的 有效成绩：{total} 次")
+                            Log.info(f"左边过的 有效成绩：{total} 次")
+                                                    
+
                             
 
                             if last_line==current_line:
                                 # print("警报 右边没过线重复过左面")
                                 info={"level":"warning","msg":"警报 右边没过线重复过左面"}
+                                Log.info(f"{info}")
+
                                 self.grade_info.append(info)
 
                             last_line=current_line
                              # print(f"右边过的 有效成绩：{total} 次")
                             info={"level":"info","msg":f"左边成绩有效 有效成绩：{total} 次"}
+                            Log.info(f"{info}")
+
                             self.grade_info.append(info)
 
                         left_cout=0
@@ -208,6 +238,7 @@ class CountDevice:
     def get_time_remain(self):
         if self.time_remain is None:
             return 0
+
         else:
             return self.time_remain
     def get_count(self)->int:

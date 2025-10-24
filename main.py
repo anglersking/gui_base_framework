@@ -44,6 +44,7 @@ from gui.uis.windows.main_window import *
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
 from utils.count_device_utils import CountDevice
+from utils.log import Log
 import serial.tools.list_ports
 from openpyxl.styles import Font, Alignment  # 添加Alignment导入
 from openpyxl import load_workbook
@@ -286,7 +287,10 @@ class MainWindow(QMainWindow):
               # 更新计时显示
             if self.race_started:
                 # if self.race_device.get_time_remain():
-                elapsed_ms = float(self.race_device.get_time_remain())
+                remain=self.race_device.get_time_remain()
+                # Log.info(f"{remain}")
+
+                elapsed_ms = float(remain)
                 # self.race_timer_elapsed.elapsed()
                 seconds = elapsed_ms // 1000
                 milliseconds = elapsed_ms % 1000
