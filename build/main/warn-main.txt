@@ -25,6 +25,8 @@ excluded module named _frozen_importlib - imported by importlib (optional), impo
 missing module named pyimod02_importers - imported by C:\Users\41884\.conda\envs\race_master\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgutil.py (delayed), C:\Users\41884\.conda\envs\race_master\Lib\site-packages\PyInstaller\hooks\rthooks\pyi_rth_pkgres.py (delayed)
 missing module named _posixsubprocess - imported by subprocess (optional), multiprocessing.util (delayed)
 missing module named fcntl - imported by subprocess (optional), serial.serialposix (top-level)
+missing module named win32evtlog - imported by logging.handlers (delayed, optional)
+missing module named win32evtlogutil - imported by logging.handlers (delayed, optional)
 missing module named org - imported by pickle (optional)
 missing module named _manylinux - imported by packaging._manylinux (delayed, optional), setuptools._vendor.packaging._manylinux (delayed, optional), wheel.vendored.packaging._manylinux (delayed, optional)
 missing module named typing_extensions.TypeAlias - imported by setuptools._vendor.typing_extensions (top-level), setuptools._reqs (conditional), setuptools._path (conditional), setuptools.errors (conditional), setuptools.extension (conditional), setuptools.config._apply_pyprojecttoml (conditional), setuptools.dist (conditional), pkg_resources (conditional), setuptools (conditional)
