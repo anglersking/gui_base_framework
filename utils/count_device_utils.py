@@ -19,6 +19,10 @@ class CountDevice:
 
     def send_stop(self):
         self.start_flag = False
+        self.time_remain=0
+        time.sleep(0.5)
+        self.end_flag = True
+
 
     def clear(self):
         with self.lock:

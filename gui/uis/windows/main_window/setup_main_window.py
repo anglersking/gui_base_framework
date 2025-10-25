@@ -67,6 +67,9 @@ class SetupMainWindow:
     def get_start_button(self):
         return self.run_start
     
+    def get_stop_button(self):
+        return self.run_stop
+    
     # def get_count_lable(self):
     #     return self.current_count_lable
     
@@ -462,9 +465,22 @@ class SetupMainWindow:
             bg_color_hover = self.themes["app_color"]["dark_three"],
             bg_color_pressed = self.themes["app_color"]["dark_four"]
         )
+        self.run_stop = PyPushButton(
+            text = "Stop",
+            radius = 8,
+            color = self.themes["app_color"]["text_foreground"],
+            bg_color = self.themes["app_color"]["dark_one"],
+            bg_color_hover = self.themes["app_color"]["dark_three"],
+            bg_color_pressed = self.themes["app_color"]["dark_four"]
+        )
         self.icon_run_start = QIcon(Functions.set_svg_icon("icon_start.svg"))
         self.run_start.setMinimumHeight(30)
         self.run_start.setIcon(self.icon_run_start)
+
+        self.icon_run_stop = QIcon(Functions.set_svg_icon("icon_stop.svg"))
+        self.run_stop.setMinimumHeight(30)
+        self.run_stop.setIcon(self.icon_run_stop)
+
 
 
 
@@ -887,6 +903,7 @@ class SetupMainWindow:
         self.ui.load_pages.row_table_info_layout.addWidget(self.table_info_widget)  
         self.ui.load_pages.row_operate_layout.addWidget(self.select_name)  
         self.ui.load_pages.row_operate_layout.addWidget(self.run_start) 
+        self.ui.load_pages.row_operate_layout.addWidget(self.run_stop) 
 
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.line_search_edit)
         self.ui.load_pages.row_tabe_operate_layout.addWidget(self.search_btn)

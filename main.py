@@ -80,6 +80,11 @@ class MainWindow(QMainWindow):
         self.run_start=SetupMainWindow.get_start_button(self)
         self.run_start.clicked.connect(self.start_race)
 
+        self.run_stop=SetupMainWindow.get_stop_button(self)
+        self.run_stop.clicked.connect(self.stop_race)
+
+        
+
         self.import_path = SetupMainWindow.get_import_path(self)
         self.select_name=SetupMainWindow.get_select_name(self)
         self.table_info_widget=SetupMainWindow.get_table_info_widget(self)
@@ -136,6 +141,15 @@ class MainWindow(QMainWindow):
     # Run function when btn is clicked
     # Check funtion by object name / btn_id
     # ///////////////////////////////////////////////////////////////
+    def stop_race(self):
+        print("stop !!!!")
+        # self.race_device = CountDevice()
+        if self.race_device:
+            self.race_device.send_stop()
+            print("OVER !!!!")
+
+
+
     def search_in_table(self):
         # 获取搜索关键字
         search_key = self.line_search_edit.text().lower()
